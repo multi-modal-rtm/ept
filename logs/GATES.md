@@ -68,3 +68,46 @@
   high-coverage ("whole-person-like," 159/180 classified, 0 fragment-like). Belongs
   in Limitations regardless of the E_max=16 sweep addition — see
   `outputs/phase2_truncation/truncation_report.json`.
+
+## Phase 3 — Model implementation and recipe lock
+
+- **Date:** 2026-08-14T18:58:31Z
+- **Gate:** `docs/LOCKED_RECIPE.md` committed; **zero test evaluations** (`docs/PLAN.md` §7).
+- **Evidence:**
+  - A6 redefined as a non-feature-matched reference row (`docs/PLAN.md` §5, commit
+    `c307e8f`) with verified BPAVTforSGER numbers: TimeSformer fine-tuned 0.9917,
+    TimeSformer video-only linear-probe 0.2648, VideoMAE fine-tuned 0.9875, VideoMAE
+    linear-probe **not available** (reported as a gap, not fabricated).
+  - `src/ept/model/ept_former.py`: EPTFormer (A0/A1/A2/A3/A4 share one class via
+    `use_temporal`/`use_social` flags), `MeanPoolMLP` (A5), `MaskOnlyMLP`
+    (mask-only). All four non-negotiables checked: no per-slot identity embedding
+    (asserted by name at construction **and** proven behaviorally —
+    `tests/test_ept_former.py`, entity-permutation invariance holds exactly for
+    every attention configuration); presence mask respected via
+    `key_padding_mask` + `[ABSENT]` embedding; backbone never referenced (this
+    module consumes cached features only); A2 shuffle reuses
+    `src/ept/tokenization/mask_ops.py`, not reimplemented.
+  - Grid frozen **before any run**: `docs/SEARCH_GRID.md`, commit `507b8c7` — 8
+    hand-picked (lr, weight_decay, dropout, epochs) points, `batch_size=32` fixed,
+    identical grid for all 7 conditions (A0–A5 + mask-only), single seed (42) for
+    search.
+  - Full search: 56 runs, **2100 val evaluations** (exact — sum of epochs across
+    all runs), 47.9 minutes wall clock. Every run has its own
+    `outputs/<condition>_<recipe>_seed42/{config.yaml,metrics.json}`.
+  - `docs/LOCKED_RECIPE.md` committed (`ddfc32f`) with the per-condition selected
+    recipe and val macro-F1. Hyperparameters are now read-only.
+  - **Zero test evaluations**: structurally enforced, not just observed —
+    `OUCCGEDataset.__init__` asserts `split in ("train", "val")`; grepped the
+    entire training/search code path for any `"test"` split reference — none
+    found; no `metrics.json` from this phase has `split_evaluated: "test"`.
+- **Result:** PASS.
+- **Flagged for discussion, not blocking the gate:** all of A0–A5 land in a
+  narrow, very high val macro-F1 band (0.971–0.992) — echoes A6's fine-tuned
+  reference numbers, suggesting near-saturation from visual content alone at
+  this val-split size, for every tokenization scheme including A0 (no entity
+  structure) and A2 (identity-shuffled). This could compress H1/H2's required
+  ≥0.02 margins once locked configs run on test in Phase 4 — watch, don't
+  pre-empt. Also: mask-only's locked-recipe number (0.430, tuned MLP) is
+  higher than Phase 2's reported number (0.373, untuned logistic regression) —
+  different estimator capacity, not a different phenomenon; both carry forward
+  with provenance stated, not conflated.
