@@ -15,6 +15,7 @@ dependencies = [
     "opencv-python-headless",
     "pandas",
     "scikit-learn",
+    "ultralytics>=8.4.120",
 ]
 
 [tool.uv.sources]
