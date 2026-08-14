@@ -1,0 +1,28 @@
+[project]
+name = "ept"
+version = "0.1.0"
+description = "Entity-Persistent Tokenization for video understanding"
+requires-python = "==3.11.*"
+dependencies = [
+    "torch==2.7.0+cu128",
+    "torchvision==0.22.0+cu128",
+    "torchaudio==2.7.0+cu128",
+    "transformers>=4.45",
+    "hydra-core",
+    "insightface",
+    "onnxruntime",
+    "supervision==0.30.0",
+    "opencv-python-headless",
+    "pandas",
+    "scikit-learn",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
