@@ -152,3 +152,42 @@
   Phase 4 can proceed meaningfully. **Not logged as a phase gate PASS/FAIL** —
   this audit doesn't have a go/no-go criterion; it surfaces a finding for
   discussion.
+
+## Phase 3.5 data audit, continued — resplit viability + MELD admission (NOT an evaluation)
+
+- **Date:** 2026-08-14T19:50:19Z
+- **Constraints honored:** no test evaluation; `docs/LOCKED_RECIPE.md` untouched,
+  zero recipe changes. Full writeup: `outputs/phase3_5_audit/TRACK1_TRACK2_REPORT.md`.
+- **Track 1 — can OUC-CGE be re-split by recording?** Connected-components at
+  0.95/0.98/0.99 give 126/1560/4905 components respectively, but a broader sweep
+  (0.80–0.90) shows a **single component holding 98.5% of the entire 7700-clip
+  corpus** — a continuum with no natural gap, not discrete recording clusters.
+  Constructed a group-disjoint 80/10/10 split at threshold 0.98 (stratified by
+  component); trivial probe on that val: **macro-F1 = 0.7305** — a real drop from
+  the leaky 0.9748 but nowhere near the DAiSEE target (0.2177). Diagnostic:
+  95.2% of the new val's clips still have a train neighbor at similarity ≥0.90
+  even after grouping. **Verdict: NOT VIABLE** — the confound is structural
+  (small number of fixed physical setups reused across the corpus, no
+  session/recording metadata exists to group by instead — confirmed absent in
+  Phase 2), not a threshold-calibration problem. Effective sample size (true
+  independent recordings) is not reliably recoverable from visual similarity
+  alone but is almost certainly far below 7700, plausibly in the tens.
+- **Track 2 — MELD admission test** (1498-clip stratified sample, lightweight
+  embeddings, screen only): near-duplicate similarity mean 0.70–0.75 vs. OUC-CGE's
+  0.97–0.98, **zero pairs ≥0.99** (OUC-CGE: 45–47%), max cross-split similarity
+  0.96 (barely above OUC-CGE's *mean*). 12 highest-similarity pairs visually
+  confirmed as recurring standing sets/cast in different moments, not same-moment
+  duplication — the documented, acceptable MELD property, not the OUC-CGE
+  failure mode. Trivial probe: **macro-F1 = 0.4155**, modestly above the 0.333
+  stratified-random floor, far below any degenerate/solved threshold. **Verdict:
+  PASSES.**
+- **CLAUDE.md updated**: new non-negotiable #8, no dataset enters this project
+  without passing `scripts/dataset_admission.py` (near-duplicate audit + trivial
+  probe vs. the DAiSEE subject-disjoint reference), codified as one command,
+  validated to reproduce both established reference numbers exactly (OUC-CGE
+  0.9748, DAiSEE 0.2177) before being run on MELD.
+- **Recommendation:** MELD should become primary, or OUC-CGE should be demoted,
+  pending a project-level decision — this changes `docs/DECISION_RULES.md`'s
+  named primary dataset and is not something to resolve unilaterally. Existing
+  OUC-CGE Phase 3 numbers should be treated as unreliable and not publishable
+  as-is. Not logged as a phase gate PASS/FAIL for the same reason as above.
