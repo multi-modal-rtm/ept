@@ -14,7 +14,6 @@ import torch
 import torch.nn as nn
 from omegaconf import DictConfig, OmegaConf
 from sklearn.metrics import f1_score
-from torch.utils.data import DataLoader
 
 from ept.model.ept_former import EPTFormer, MeanPoolMLP, MaskOnlyMLP, assert_no_backbone_params
 from ept.train.dataset import OUCCGEDataset
@@ -38,35 +37,49 @@ def build_model(condition, dropout):
     raise ValueError(f"unknown condition {condition!r}")
 
 
-def forward_pass(model, condition, feat, mask, device):
-    feat, mask = feat.to(device), mask.to(device)
+def forward_pass(model, condition, feat, mask):
     if condition == "mask_only":
         return model(mask)
     return model(feat, mask)
 
 
-def run_epoch(model, loader, condition, device, optimizer=None):
+def to_device(ds, device):
+    """Whole dataset resident on GPU once per run — small (~1GB total), and this
+    avoids per-batch host->device transfer + DataLoader collation overhead, which
+    dominated wall-clock for this model (many small MultiheadAttention calls):
+    measured 427s -> 198s from preloading alone, further reduced by this."""
+    ds.features = ds.features.to(device)
+    ds.masks = ds.masks.to(device)
+    ds.labels = ds.labels.to(device)
+    return ds
+
+
+def run_epoch(model, ds, condition, batch_size, device, optimizer=None, shuffle=False):
     training = optimizer is not None
     model.train(training)
+    n = len(ds)
+    order = torch.randperm(n, device=device) if shuffle else torch.arange(n, device=device)
+
     all_logits, all_labels = [], []
     total_loss = 0.0
-    for feat, mask, label in loader:
-        label = label.to(device)
+    for i in range(0, n, batch_size):
+        idx = order[i:i + batch_size]
+        feat, mask, label = ds.features[idx], ds.masks[idx], ds.labels[idx]
         with torch.set_grad_enabled(training):
-            logits = forward_pass(model, condition, feat, mask, device)
+            logits = forward_pass(model, condition, feat, mask)
             loss = nn.functional.cross_entropy(logits, label)
         if training:
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
         total_loss += loss.item() * label.size(0)
-        all_logits.append(logits.detach().cpu())
-        all_labels.append(label.cpu())
-    logits = torch.cat(all_logits)
-    labels = torch.cat(all_labels)
+        all_logits.append(logits.detach())
+        all_labels.append(label)
+    logits = torch.cat(all_logits).cpu()
+    labels = torch.cat(all_labels).cpu()
     preds = logits.argmax(dim=-1)
     macro_f1 = f1_score(labels.numpy(), preds.numpy(), average="macro")
-    return total_loss / len(labels), macro_f1
+    return total_loss / n, macro_f1
 
 
 @hydra.main(config_path="../../../configs", config_name="train", version_base=None)
@@ -76,10 +89,8 @@ def main(cfg: DictConfig):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     condition = cfg.condition.name
-    train_ds = OUCCGEDataset("train", condition, run_seed=cfg.seed)
-    val_ds = OUCCGEDataset("val", condition, run_seed=cfg.seed)
-    train_loader = DataLoader(train_ds, batch_size=cfg.recipe.batch_size, shuffle=True)
-    val_loader = DataLoader(val_ds, batch_size=cfg.recipe.batch_size, shuffle=False)
+    train_ds = to_device(OUCCGEDataset("train", condition, run_seed=cfg.seed), device)
+    val_ds = to_device(OUCCGEDataset("val", condition, run_seed=cfg.seed), device)
 
     model = build_model(condition, cfg.recipe.dropout).to(device)
     assert_no_backbone_params(model)  # trivially true (no backbone ref); explicit per CLAUDE.md
@@ -95,8 +106,12 @@ def main(cfg: DictConfig):
     best_val_f1 = -1.0
     best_epoch = -1
     for epoch in range(cfg.recipe.epochs):
-        train_loss, train_f1 = run_epoch(model, train_loader, condition, device, optimizer)
-        val_loss, val_f1 = run_epoch(model, val_loader, condition, device, optimizer=None)
+        train_loss, train_f1 = run_epoch(
+            model, train_ds, condition, cfg.recipe.batch_size, device, optimizer, shuffle=True
+        )
+        val_loss, val_f1 = run_epoch(
+            model, val_ds, condition, cfg.recipe.batch_size, device, optimizer=None, shuffle=False
+        )
         history.append({"epoch": epoch, "train_loss": train_loss, "train_macro_f1": train_f1,
                          "val_loss": val_loss, "val_macro_f1": val_f1})
         if val_f1 > best_val_f1:
