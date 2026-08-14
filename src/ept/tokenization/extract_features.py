@@ -1,12 +1,24 @@
 """Phase 2: frozen DINOv2 feature cache, per docs/PLAN.md §3.1/§3.3 and
 .claude/skills/ept-data.md.
 
-For every clip: crop each of the top-E_max=8 selected tracks per frame to 224x224,
+For every clip: crop each of the top-E selected tracks per frame to 224x224,
 batch through frozen DINOv2-with-registers-base (fp16, no grad). Representation =
 CLS-token concatenated with mean-of-patch-tokens (excluding the 4 register tokens),
 D=1536. Mean-pool within each of S=8 segments. Writes
-cache/features/<dataset>/<split>/<clip_id>.npy [E_max, S, D] float16, plus a
-sibling <clip_id>_mask.npy boolean presence mask [E_max, S].
+cache/features/<dataset>/<split>/<clip_id>.npy [E, S, D] float16, a sibling
+<clip_id>_mask.npy boolean presence mask [E, S], and <clip_id>_scores.npy float32
+[E] holding the (mean_confidence x frame_coverage) selection score for each slot
+(0.0 for padding slots — see extract_entity_features docstring) so the selection
+ordering is reproducible and auditable, not just implicit in array position.
+
+**E is 16 for OUC-CGE, 8 for DAiSEE.** OUC-CGE's cache was extended from the
+original E_max=8 after finding 19% of clips have real simultaneous crowding beyond
+8 people (outputs/phase2_truncation/REPORT.md) — this is the token-budget SWEEP
+ceiling (docs/DECISION_RULES.md amendment). **The pre-registered PRIMARY condition
+(A1) is unchanged at E=8**: train it by slicing the OUC-CGE cache to [:8], which is
+asserted bitwise-identical to a from-scratch E_max=8 extraction in
+tests/test_e_max_slice_equivalence.py. See CLAUDE.md — this is exactly the kind of
+detail that silently becomes a wrong result if missed.
 
 A0 grid baseline: the SAME backbone, SAME crop-then-CLS+mean-patch processing path,
 applied to a fixed 2x4 (rows x cols) non-overlapping spatial tiling of each frame
@@ -31,7 +43,14 @@ import numpy as np
 import torch
 from transformers import AutoModel
 
-E_MAX = 8
+# LOCKED_PRIMARY_E_MAX=8 is the pre-registered primary condition (A1) and DAiSEE's
+# E_max (DAiSEE is E=1 by construction; PLAN.md's 8-slot budget was never the
+# constraint there). OUCCGE_E_MAX=16 is the extended token-budget sweep ceiling
+# (docs/DECISION_RULES.md amendment, added after the truncation finding that 19%
+# of OUC-CGE clips exceed 8 simultaneous tracked people). Anyone training the
+# primary A1 condition slices the OUC-CGE cache to [:8] — see CLAUDE.md.
+LOCKED_PRIMARY_E_MAX = 8
+OUCCGE_E_MAX = 16
 S = 8
 T = 32
 D = 1536  # 768 (CLS) + 768 (mean patch)
@@ -78,9 +97,12 @@ def embed_batch(model, crops_chw, batch_size=256):
     return np.concatenate(out, axis=0)
 
 
-def select_top_e(clip, e_max=E_MAX):
+def select_top_e(clip, e_max):
     """Top-E tracks by mean_confidence x frame_coverage — the locked selection
-    rule (docs/DECISION_RULES.md), identical code path for every condition."""
+    rule (docs/DECISION_RULES.md), identical code path for every condition and
+    independent of e_max itself (only the slice point differs), which is exactly
+    what the slice-equivalence test in tests/test_e_max_slice_equivalence.py
+    checks empirically rather than just assuming from this comment."""
     n_total = clip["n_frames_grabbed"]
     track_frames = {}
     for frame in clip["frames"]:
@@ -120,12 +142,17 @@ def decode_needed_frames(video_path, clip):
     return frames
 
 
-def extract_entity_features(model, frames, clip):
-    """[E_max, S, D] float16 + [E_max, S] bool mask. `frames`: {frame_pos: frame},
-    pre-decoded once per clip (see decode_needed_frames)."""
-    top_e = select_top_e(clip)
+def extract_entity_features(model, frames, clip, e_max):
+    """[e_max, S, D] float16 + [e_max, S] bool mask + [e_max] float32 selection
+    score (0.0 for padding slots where fewer than e_max tracks exist — always
+    check mask.any(axis=1) for validity, not the score array, exactly the same
+    "never silently zero-fill without an explicit validity signal" rule as the
+    presence mask itself). `frames`: {frame_pos: frame}, pre-decoded once per clip."""
+    top_e = select_top_e(clip, e_max)
+    scores = np.zeros(e_max, dtype=np.float32)
     crops, targets = [], []
-    for e, (_, tid, entries) in enumerate(top_e):
+    for e, (score, tid, entries) in enumerate(top_e):
+        scores[e] = score
         for frame_pos, bbox, _ in entries:
             frame = frames.get(frame_pos)
             if frame is None:
@@ -140,14 +167,14 @@ def extract_entity_features(model, frames, clip):
             targets.append((e, segment_of(frame_pos)))
 
     embeddings = embed_batch(model, crops)
-    feat_sum = np.zeros((E_MAX, S, D), dtype=np.float32)
-    feat_cnt = np.zeros((E_MAX, S), dtype=np.int32)
+    feat_sum = np.zeros((e_max, S, D), dtype=np.float32)
+    feat_cnt = np.zeros((e_max, S), dtype=np.int32)
     for (e, s), emb in zip(targets, embeddings):
         feat_sum[e, s] += emb
         feat_cnt[e, s] += 1
     mask = feat_cnt > 0
     feat = np.where(mask[..., None], feat_sum / np.maximum(feat_cnt, 1)[..., None], 0.0)
-    return feat.astype(np.float16), mask
+    return feat.astype(np.float16), mask, scores
 
 
 def extract_grid_features(model, frames, clip):
@@ -198,25 +225,25 @@ FEATURES_ROOT = "/home/devops/ept/cache/features"
 FEATURES_GRID_ROOT = "/home/devops/ept/cache/features_grid"
 
 
-def iter_ouccge_clips():
+def iter_ouccge_clips(e_max=OUCCGE_E_MAX):
     for split in ["train", "val", "test"]:
         for fp in sorted(glob.glob(os.path.join(TRACKS_ROOT, split, "*.json"))):
             with open(fp) as f:
                 clip = json.load(f)
             video_path = os.path.join(OUCCGE_DATA_ROOT, clip["rel_path"].replace("videos/", ""))
-            yield "ouccge", split, clip["clip_id"], video_path, clip
+            yield "ouccge", split, clip["clip_id"], video_path, clip, e_max
 
 
-def iter_daisee_clips():
+def iter_daisee_clips(e_max=LOCKED_PRIMARY_E_MAX):
     for split in ["train", "val", "test"]:
         for fp in sorted(glob.glob(os.path.join(TRACKS_ROOT, "daisee", split, "*.json"))):
             with open(fp) as f:
                 clip = json.load(f)
             video_path = os.path.join(DAISEE_DATA_ROOT, clip["rel_path"])
-            yield "daisee", split, clip["clip_id"], video_path, clip
+            yield "daisee", split, clip["clip_id"], video_path, clip, e_max
 
 
-def process_clip(model, dataset, split, clip_id, video_path, clip):
+def process_clip(model, dataset, split, clip_id, video_path, clip, e_max):
     ent_dir = os.path.join(FEATURES_ROOT, dataset, split)
     grid_dir = os.path.join(FEATURES_GRID_ROOT, dataset, split)
     os.makedirs(ent_dir, exist_ok=True)
@@ -224,22 +251,26 @@ def process_clip(model, dataset, split, clip_id, video_path, clip):
 
     ent_path = os.path.join(ent_dir, f"{clip_id}.npy")
     mask_path = os.path.join(ent_dir, f"{clip_id}_mask.npy")
+    scores_path = os.path.join(ent_dir, f"{clip_id}_scores.npy")
     grid_path = os.path.join(grid_dir, f"{clip_id}.npy")
 
     frames = decode_needed_frames(video_path, clip)
 
-    feat, mask = extract_entity_features(model, frames, clip)
+    feat, mask, scores = extract_entity_features(model, frames, clip, e_max)
     np.save(ent_path, feat)
     np.save(mask_path, mask)
+    np.save(scores_path, scores)
 
     grid_feat = extract_grid_features(model, frames, clip)
     np.save(grid_path, grid_feat)
 
     return {
-        "dataset": dataset, "split": split, "clip_id": clip_id,
-        "entity_path": ent_path, "mask_path": mask_path, "grid_path": grid_path,
+        "dataset": dataset, "split": split, "clip_id": clip_id, "e_max": e_max,
+        "entity_path": ent_path, "mask_path": mask_path,
+        "scores_path": scores_path, "grid_path": grid_path,
         "entity_sha256": sha256_of_file(ent_path),
         "mask_sha256": sha256_of_file(mask_path),
+        "scores_sha256": sha256_of_file(scores_path),
         "grid_sha256": sha256_of_file(grid_path),
         "n_entity_present": int(mask.sum()),
     }
@@ -260,8 +291,8 @@ def _init_worker():
 
 
 def _process_clip_mp(args):
-    dataset, split, clip_id, video_path, clip = args
-    return process_clip(_MODEL, dataset, split, clip_id, video_path, clip)
+    dataset, split, clip_id, video_path, clip, e_max = args
+    return process_clip(_MODEL, dataset, split, clip_id, video_path, clip, e_max)
 
 
 def run_extraction(all_clips, n_workers=8, log_path=None):
@@ -297,25 +328,30 @@ def build_manifest():
     tracking is still finishing) and merged here once both are complete."""
     entries = []
     for dataset in ["ouccge", "daisee"]:
+        dataset_e_max = OUCCGE_E_MAX if dataset == "ouccge" else LOCKED_PRIMARY_E_MAX
         for split in ["train", "val", "test"]:
             ent_dir = os.path.join(FEATURES_ROOT, dataset, split)
             grid_dir = os.path.join(FEATURES_GRID_ROOT, dataset, split)
             if not os.path.isdir(ent_dir):
                 continue
             for ent_path in sorted(glob.glob(os.path.join(ent_dir, "*.npy"))):
-                if ent_path.endswith("_mask.npy"):
+                if ent_path.endswith("_mask.npy") or ent_path.endswith("_scores.npy"):
                     continue
                 clip_id = os.path.splitext(os.path.basename(ent_path))[0]
                 mask_path = os.path.join(ent_dir, f"{clip_id}_mask.npy")
+                scores_path = os.path.join(ent_dir, f"{clip_id}_scores.npy")
                 grid_path = os.path.join(grid_dir, f"{clip_id}.npy")
-                if not (os.path.exists(mask_path) and os.path.exists(grid_path)):
+                if not (os.path.exists(mask_path) and os.path.exists(grid_path)
+                        and os.path.exists(scores_path)):
                     continue
                 mask = np.load(mask_path)
                 entries.append({
-                    "dataset": dataset, "split": split, "clip_id": clip_id,
-                    "entity_path": ent_path, "mask_path": mask_path, "grid_path": grid_path,
+                    "dataset": dataset, "split": split, "clip_id": clip_id, "e_max": dataset_e_max,
+                    "entity_path": ent_path, "mask_path": mask_path,
+                    "scores_path": scores_path, "grid_path": grid_path,
                     "entity_sha256": sha256_of_file(ent_path),
                     "mask_sha256": sha256_of_file(mask_path),
+                    "scores_sha256": sha256_of_file(scores_path),
                     "grid_sha256": sha256_of_file(grid_path),
                     "n_entity_present": int(mask.sum()),
                 })
@@ -323,7 +359,8 @@ def build_manifest():
     with open(manifest_path, "w") as f:
         json.dump({
             "n_clips": len(entries),
-            "e_max": E_MAX, "s": S, "t": T, "d": D,
+            "locked_primary_e_max": LOCKED_PRIMARY_E_MAX, "ouccge_e_max": OUCCGE_E_MAX,
+            "s": S, "t": T, "d": D,
             "grid_rows": GRID_ROWS, "grid_cols": GRID_COLS,
             "model": MODEL_NAME,
             "entries": entries,
