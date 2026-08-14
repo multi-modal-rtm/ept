@@ -27,7 +27,8 @@ deadline **1 September 2026**. Full plan: `docs/PLAN.md`. Pre-registration: `doc
 
 ## Stack
 
-Python 3.11, PyTorch 2.4, transformers 4.45+, Hydra, `uv` as package manager.
+Python 3.11, PyTorch 2.7.0+cu128 (substituted for 2.4 in Phase 0 — Blackwell/sm_120 requires it;
+see `docs/PLAN.md` §9 amendment, commit `d729a56`), transformers 4.45+, Hydra, `uv` as package manager.
 Backbone: `facebook/dinov2-with-registers-base`, frozen, fp16, cached at
 `/home/devops/.cache/huggingface/hub/`.
 Detector: InsightFace SCRFD (`buffalo_l`). Tracker: `supervision` ByteTrack.
