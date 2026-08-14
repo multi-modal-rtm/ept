@@ -82,6 +82,10 @@ def _init_worker():
     global _APP
     import torch
     torch.set_num_threads(1)
+    import cv2
+    cv2.setNumThreads(1)  # CLAUDE.md hard-won fact: OpenCV's parallel_for
+    # defaults to all-cores-per-process (face_align.py's cv2.warpAffine etc.) —
+    # measured: thread count 1 -> 60 on the first .get() call without this.
     import onnxruntime as ort
     _orig_init = ort.InferenceSession.__init__
 
