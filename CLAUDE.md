@@ -95,3 +95,7 @@ paper/              acmart sigconf sources
 - Two configs sharing a `results_dir` silently overwrite each other's checkpoints. Every condition
   gets its own `outputs/<run_id>/`. This has already cost this lab a paper's worth of confusion.
 - The lab server is unreliable. Back up the feature cache via rclone the moment Phase 2 completes.
+- `rclone copy` of the raw cache tree (~16k small files: tracks JSON + features/scores/mask/grid
+  `.npy` per clip) hit an **~8h50m ETA** — Google Drive's per-file API overhead dominates for many
+  small files, not bandwidth. Fix: `tar` each cache subdirectory first, upload the handful of large
+  archives instead. Same 4.1 GiB of data: ~9 minutes instead of ~9 hours.
