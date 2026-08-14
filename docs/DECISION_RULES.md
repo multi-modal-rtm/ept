@@ -46,4 +46,9 @@ Optimizer recipe: locked at end of Phase 3 into `docs/LOCKED_RECIPE.md`; unchang
 
 ## Amendments
 
-_(none)_
+### 2026-08-14 — Mask-only control
+
+Mask-only control (added 2026-08-14, before any test evaluation): a classifier trained on the
+entity presence mask `[E,S]` alone, with no visual features. Rationale: face detection failure is
+plausibly correlated with the engagement label (disengaged students turn away), so the presence
+pattern may leak label information. Reported alongside A0–A6.
