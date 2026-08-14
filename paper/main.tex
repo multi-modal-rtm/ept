@@ -1,0 +1,105 @@
+%% ICFNDS 2026 — IoT Track
+%% For blind review (CHECK THE PORTAL FIRST — ICFNDS has historically been non-blind):
+%%   \documentclass[sigconf,anonymous,review]{acmart}
+\documentclass[sigconf]{acmart}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{subcaption}
+
+%% --- Publication metadata -------------------------------------------------
+%% TODO: replace with the exact strings from the ICFNDS camera-ready instructions.
+%% Do not guess the edition number of the conference.
+\copyrightyear{2026}
+\acmYear{2026}
+\setcopyright{acmlicensed}
+\acmConference[ICFNDS 2026]{International Conference on Future Networks and
+  Distributed Systems}{November 04--06, 2026}{İzmir, Türkiye}
+\acmISBN{978-x-xxxx-xxxx-x/26/11}   % TODO
+\acmDOI{10.1145/nnnnnnn.nnnnnnn}    % TODO
+
+\begin{document}
+
+%% TODO: pick per the decision rule in docs/DECISION_RULES.md.
+%% Branch (a): "Tokens That Persist: ..."   Branches (b)/(c): "Does Identity Persistence Matter? ..."
+\title{Tokens That Persist: Entity-Centric Video Tokenization for Group
+  Engagement Analysis at the Edge}
+
+\author{Abdulaziz Xo'jamqulov}
+\affiliation{%
+  \institution{Tashkent University of Information Technologies}
+  \city{Tashkent}
+  \country{Uzbekistan}}
+\email{}
+
+%% TODO: confirm the author list and order with all coauthors before submission.
+
+\begin{abstract}
+%% Write LAST, after the decision rule fires. Four moves:
+%% (1) grid tokens have no persistent referent, unlike text tokens;
+%% (2) EPT emits one token per (entity, segment), recovering identity;
+%% (3) the identity-shuffle control isolates persistence from entity-localized cropping;
+%% (4) headline result + end-to-end cost including detection.
+\end{abstract}
+
+%% CCS codes: generate at http://dl.acm.org/ccs.cfm and paste the CCSXML block here,
+%% before \maketitle. Required for papers over two pages.
+%% Suggested areas: Computing methodologies~Activity recognition and understanding;
+%% Computing methodologies~Video summarization; Human-centered computing~Ubiquitous computing.
+
+\keywords{video understanding, tokenization, attention efficiency, engagement
+  recognition, edge inference}
+
+\maketitle
+
+\section{Introduction}
+%% Draft from Aug 21 — does not depend on results.
+%% Core argument: a text token at position 3 and one at position 40 denote the same
+%% lexical item; a video patch at (i,j,t) and (i,j,t+1) do not denote the same anything.
+%% Quadratic attention over grid tokens therefore prices affinities between referent-free
+%% symbols. State the contribution as a controlled test of whether restoring persistence helps.
+
+\section{Related Work}
+%% Draft from Aug 21. Four strands:
+%% (a) efficient video attention: divided space-time, factorised encoders, windowed,
+%%     pooling attention, token merging, SSM video models;
+%% (b) object-centric / slot-based video representation;
+%% (c) engagement and group affect recognition;
+%% (d) edge video analytics.
+%% Position EPT against (a) and (b): not a cheaper approximation of grid attention, but a
+%% different token definition.
+
+\section{Method}
+\subsection{Entity-Persistent Tokenization}
+\subsection{The EPT-Former}
+\subsection{Isolating Persistence: the Identity-Shuffle Control}
+%% This subsection is the methodological heart. Explain why A2 exists and why no
+%% per-slot identity embedding is used.
+
+\section{Experimental Setup}
+\subsection{Datasets and Protocol}
+\subsection{Conditions}
+\subsection{Pre-registration}
+%% State that hypotheses and the decision rule were committed before any test evaluation,
+%% and give the commit hash. This is a credibility asset — do not bury it.
+
+\section{Results}
+\subsection{Does Persistence Help?}
+\subsection{Ablations}
+\subsection{Computational Cost}
+%% Report detection+tracking as its own line item. Never fold it into the attention FLOPs.
+
+\section{Discussion and Limitations}
+%% Include: single-camera classroom setting; tracking failure modes; E=1 degeneracy on DAiSEE.
+
+\section{Conclusion}
+
+\begin{acks}
+%% Omit entirely in anonymous mode — the acks environment handles this automatically.
+\end{acks}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\end{document}
