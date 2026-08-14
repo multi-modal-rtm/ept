@@ -33,6 +33,22 @@ Backbone: `facebook/dinov2-with-registers-base`, frozen, fp16, cached at
 `/home/devops/.cache/huggingface/hub/`.
 Detector: InsightFace SCRFD (`buffalo_l`). Tracker: `supervision` ByteTrack.
 
+## Feature cache E_max — READ BEFORE TRAINING ANYTHING
+
+**The OUC-CGE feature cache (`cache/features/ouccge/`) holds E=16 entity slots.
+The LOCKED PRIMARY CONDITION (A1, and the pre-registered H1/H2 comparisons) REMAINS
+E=8.** Train A1 — and every condition in the original A0–A6 matrix — by slicing the
+cache to `[:8]`, never by using all 16 slots. 16 exists only for the extended
+token-budget sweep (`E ∈ {1,2,4,8,16}`, `docs/DECISION_RULES.md` amendment,
+2026-08-14). DAiSEE's cache is unaffected and stays at E=8 throughout (DAiSEE is
+E=1 by construction; the cap was never binding there).
+
+This is exactly the kind of detail that silently becomes a wrong result: loading
+the cache and using all 16 slots for what's reported as the "primary" condition
+would quietly change what A1 measures relative to the frozen pre-registration.
+`tests/test_e_max_slice_equivalence.py` asserts `cache[:8]` is bitwise identical to
+a from-scratch E_max=8 extraction — run it if you're ever unsure the slice is safe.
+
 ## Layout
 
 ```

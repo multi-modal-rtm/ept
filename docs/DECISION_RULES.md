@@ -52,3 +52,11 @@ Mask-only control (added 2026-08-14, before any test evaluation): a classifier t
 entity presence mask `[E,S]` alone, with no visual features. Rationale: face detection failure is
 plausibly correlated with the engagement label (disengaged students turn away), so the presence
 pattern may leak label information. Reported alongside A0–A6.
+
+### 2026-08-14 — Extended token-budget sweep
+
+Token-budget sweep extended to E in {1,2,4,8,16} (added 2026-08-14, before any test evaluation).
+Rationale: 19% of OUC-CGE clips exceed 8 simultaneous tracked people, and dropped tracks are
+predominantly whole persons (159/180), so the original sweep ceiling coincided with systematic
+truncation. The primary condition is UNCHANGED at E=8; slice-equivalence to the original pipeline
+is asserted in tests.
