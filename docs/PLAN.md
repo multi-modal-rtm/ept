@@ -170,6 +170,12 @@ Sections 1–3 (intro, related work, method) do not depend on results — draft 
 - Seeds: `{42, 1337, 2024}` — consistent with the SocialArcNet recipe.
 - `E_max = 8`, `S = 8`, `T = 32`, `d = 384`, `L = 4`.
 - Reporting: mean ± std across three seeds, every number.
+- **Software stack amendment (Phase 0, 2026-08-14):** `PyTorch 2.4` (as specified in `CLAUDE.md` §Stack)
+  predates Blackwell (`sm_120`) kernel support and fails on this lab's RTX 5090 ("no kernel image is
+  available for execution on the device"). Substituted `torch==2.7.0+cu128` — the same build the
+  BPAVTforSGER benchmark suite already trains successfully with on this machine. Verified via
+  `torch.cuda.get_device_capability() == (12, 0)` and a real fp16 matmul executed on-device.
+  `transformers>=4.45` and the rest of the stack are unaffected.
 
 ---
 
