@@ -24,6 +24,15 @@ deadline **1 September 2026**. Full plan: `docs/PLAN.md`. Pre-registration: `doc
    A single-seed number never enters a table.
 7. **Stop and show.** At each checkpoint in `docs/PHASE_PROMPTS.md`, present the result and wait.
    Do not chain phases.
+8. **No dataset enters this project without passing the admission test.** Cross-split near-duplicate
+   analysis (clip-level embedding similarity, connected-component check) plus a trivial-feature probe
+   (mean-pooled embedding, no temporal/entity/attention structure, logistic regression, train→val),
+   compared against a subject-disjoint reference (DAiSEE: 0.2177). Run via
+   `scripts/dataset_admission.py --dataset <name>` — one command, not a bespoke script per dataset.
+   Discovered 2026-08-14 (Phase 3.5): OUC-CGE's provided split fails this test (trivial probe 0.9748,
+   near-duplicate content scattered across train/val/test — see `logs/GATES.md`). MELD passed it
+   (trivial probe 0.4155, max cross-split similarity 0.96 vs. OUC-CGE's 45%+ of pairs above 0.99;
+   high-similarity pairs are recurring standing sets/cast, not same-moment duplication).
 
 ## Stack
 
