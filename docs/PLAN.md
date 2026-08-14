@@ -108,9 +108,34 @@ Shared: frozen DINOv2 features, cached; identical optimizer recipe (locked end o
 | **A3** | EPT, temporal attention only | Contribution of social attention |
 | **A4** | EPT, social attention only | Contribution of temporal attention |
 | **A5** | Mean-pool entity tokens → MLP | Is attention needed at all? |
-| **A6** | Full space-time reference (TimeSformer / VideoMAE, frozen-feature probe) | Accuracy ceiling at full budget |
+| **A6** | **Reference row, NOT feature-matched** — verified TimeSformer/VideoMAE numbers from the BPAVTforSGER reruns on this exact 771-clip video-only OUC-CGE protocol | Accuracy-ceiling *context*, not part of the matched-feature ablation |
 
-Secondary sweep from the same cache: `E ∈ {1,2,4,8}` × `S ∈ {2,4,8,16}` → token-budget Pareto.
+Secondary sweep from the same cache: `E ∈ {1,2,4,8,16}` × `S ∈ {2,4,8,16}` → token-budget Pareto
+(`E=16` per the 2026-08-14 `DECISION_RULES.md` amendment; primary condition A1 stays locked at `E=8`).
+
+**A6 redefinition (2026-08-14, Phase 3).** A6 was originally scoped as a "frozen-feature probe"
+implying it would share the frozen-DINOv2 cache like every other condition — but no such probe was
+ever built for TimeSformer/VideoMAE, and building one now would mean a *different* frozen backbone
+(TimeSformer/VideoMAE's own encoder, not DINOv2) probed the same way, which is not a meaningful
+comparison and was never actually planned. **A6 is redefined as a reference row**: verified numbers
+from the BPAVTforSGER benchmark suite's reruns on the identical 771-clip video-only OUC-CGE test
+protocol, marked in every results table as **not feature-matched** (non-negotiable #3 is explicitly
+waived for this row only — it exists for accuracy-ceiling context, not as an ablation arm).
+
+| Model | Regime | Macro-F1 | Seeds | Source |
+|---|---|---:|---|---|
+| TimeSformer | Fine-tuned (full backbone) | 0.9917 | 1 (no ± std available) | `BPAVTforSGER/outputs/OUC-CGE/timesformer_finetune/` |
+| TimeSformer | Video-only linear probe (frozen backbone) | 0.2648 | 1 (no ± std available) | `BPAVTforSGER/outputs/OUC-CGE/timesformer_linprobe/` |
+| VideoMAE | Fine-tuned (full backbone) | 0.9875 | 1 (no ± std available) | `BPAVTforSGER/outputs/OUC-CGE/videomae_experiment/` |
+| VideoMAE | Video-only linear probe (frozen backbone) | **not available** — no linear-probe rerun exists for VideoMAE in BPAVTforSGER; report the gap, do not fabricate a number | — | — |
+
+The fine-tuned numbers (TimeSformer 0.992, VideoMAE 0.988) show the task is close to saturated
+*given full end-to-end fine-tuning* — useful ceiling context. The frozen linear-probe number
+(TimeSformer 0.265, barely above the 0.190 majority-class floor and below the ~0.33 stratified-random
+floor established in Phase 2) is the more relevant comparison for A0–A5: it shows a frozen backbone
+probed the crude way (no tokenization structure at all, just a linear head on pooled features) does
+**not** get you the fine-tuned ceiling — which is exactly the regime A0–A5 operate in, and is why the
+frozen-probe number belongs in the table explicitly rather than only the flattering fine-tuned one.
 
 ---
 
