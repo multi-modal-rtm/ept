@@ -3,5 +3,6 @@ outputs/
 logs/*.log
 *.npy
 *.pth
+*.pt
 __pycache__/
 .venv/
