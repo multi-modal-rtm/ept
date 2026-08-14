@@ -60,6 +60,17 @@ paper/              acmart sigconf sources
   default before constructing any `FaceAnalysis`/onnxruntime session, and keep worker count
   well under core count regardless. Cost this project 20 minutes once; should cost the next
   reader none.
+- `ultralytics` YOLO silently resets torch's **intra-op** thread count to
+  `min(8, ncpu)` internally on first `.predict()` call, overriding whatever
+  `torch.set_num_threads(1)` was set beforehand. Also: with the default `fork`
+  multiprocessing start method, worker processes inherit whatever native thread
+  pools (BLAS/OpenCV/torch) the **parent** already initialized at module-import
+  time — setting `OMP_NUM_THREADS`-style env vars inside a `Pool` initializer,
+  after those libraries are already imported at module scope, is too late. Set
+  thread-limiting env vars as the very first lines of the file (before any other
+  import), and re-call `torch.set_num_threads(1)` before every single `.predict()`
+  call, not just once at worker init. Measured impact: 20 workers went from
+  6.0s/clip amortized (still-oversubscribed) to 0.32s/clip (~19x) after both fixes.
 - OUC-CGE class distribution: 2396 / 1653 / 2115, verified against `train.csv`.
 - MELD raw video lives at `/home/devops/socialarcnet-v2/data/meld/raw/MELD.Raw/MELD.Raw/`.
   Clip counts exceed label counts (test: 2747 files vs 2610 labels; dev: 1112 vs 1109) — this is a
