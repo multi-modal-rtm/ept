@@ -1,0 +1,6 @@
+name: r07
+lr: 0.0001
+weight_decay: 0.0
+dropout: 0.0
+epochs: 50
+batch_size: 32

@@ -1,0 +1,6 @@
+name: r01
+lr: 0.001
+weight_decay: 0.0
+dropout: 0.0
+epochs: 30
+batch_size: 32

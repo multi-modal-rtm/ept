@@ -1,0 +1,16 @@
+defaults:
+  - condition: a1
+  - recipe: r01
+  - _self_
+
+seed: 42
+run_id: "${condition.name}_${recipe.name}_seed${seed}"
+
+hydra:
+  run:
+    dir: /home/devops/ept/outputs/hydra_logs/${run_id}
+  sweep:
+    dir: /home/devops/ept/outputs/hydra_logs
+    subdir: ${run_id}
+  job:
+    chdir: false
