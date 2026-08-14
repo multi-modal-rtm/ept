@@ -49,6 +49,17 @@ paper/              acmart sigconf sources
 
 - OUC-CGE: exclude `low/view2572.mp4` (missing) and `low/view2531.mp4` (moov atom not found).
   Test protocol is **771 clips, video-only**. Videos do contain audio; ignore it here.
+- OUC-CGE: also exclude `low/view61.mp4`, `low/view1579.mp4`, `high/view1325.mp4` — found
+  undecodable (reported frame count far exceeds what OpenCV can actually read) during the
+  Phase 1 detector bake-off. All three are **train-split only** (not in `val.csv`/`test.csv`);
+  the published 771-clip test protocol is unaffected.
+- `onnxruntime.InferenceSession` defaults to using **all cores per session** when no
+  `SessionOptions` is passed, and `insightface` exposes no way to set one through its public
+  API. Under multiprocessing this oversubscribes savagely (measured: load average 587 on this
+  60-core box at 48 workers). Cap it explicitly — monkeypatch a 1-thread `SessionOptions`
+  default before constructing any `FaceAnalysis`/onnxruntime session, and keep worker count
+  well under core count regardless. Cost this project 20 minutes once; should cost the next
+  reader none.
 - OUC-CGE class distribution: 2396 / 1653 / 2115, verified against `train.csv`.
 - MELD raw video lives at `/home/devops/socialarcnet-v2/data/meld/raw/MELD.Raw/MELD.Raw/`.
   Clip counts exceed label counts (test: 2747 files vs 2610 labels; dev: 1112 vs 1109) — this is a
