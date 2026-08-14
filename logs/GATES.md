@@ -111,3 +111,44 @@
   higher than Phase 2's reported number (0.373, untuned logistic regression) —
   different estimator capacity, not a different phenomenon; both carry forward
   with provenance stated, not conflated.
+
+## Phase 3.5 data audit (NOT an evaluation)
+
+- **Date:** 2026-08-14T19:11:31Z
+- **Trigger:** Phase 3's flagged observation (A0–A5 all landing in a narrow,
+  very high val band, 0.971–0.992) warranted investigation before Phase 4.
+- **Constraints honored:** no model fit on test; no test result used to change
+  any hyperparameter; `docs/LOCKED_RECIPE.md` untouched, zero recipe changes.
+  Full writeup: `outputs/phase3_5_audit/REPORT.md`.
+- **Findings:**
+  1. **Near-duplicate analysis** (clip-level masked-mean DINOv2 embedding,
+     cosine similarity): val→train 98.57% of clips have a train neighbor at
+     similarity ≥0.95 (44.99% ≥0.99); test→train 99.09% ≥0.95 (47.34% ≥0.99).
+     Elevated roughly equally for both split pairs — not localized to val alone.
+  2. **12 highest-similarity cross-split pairs, rendered and visually inspected**
+     (`outputs/phase3_5_audit/pairs/`): every one at similarity ≥0.9999996,
+     identical labels, and visually the **same room, same students, same table,
+     same objects, same moment** — adjacent temporal segments of one continuous
+     recording split across train/val/test independently. One train clip
+     (`low_view2603`) is the nearest neighbor for 8 different val/test clips.
+  3. **Split structure:** view numbers are sequential within each class and
+     **not blocked by split** — adjacent view numbers (N, N+1) land in
+     different splits 33.1–35.1% of the time across all three classes, starting
+     within the first ~40 clips of the `low` class. Consistent with a clip-level
+     (not session-level) split of continuous recordings.
+  4. **Trivial-feature probe** (logistic regression on mean-pooled clip
+     embedding, no temporal/entity/attention structure): **OUC-CGE val
+     macro-F1 = 0.9748** — within noise of the full locked-recipe EPT-Former
+     (0.9767).
+  5. **DAiSEE cross-check**, identical probe, subject-disjoint split by
+     construction: **val macro-F1 = 0.2177.** Same code, same feature
+     extraction, 0.97 vs. 0.22 — **localizes the anomaly to OUC-CGE's provided
+     split, not to this project's pipeline, features, or probe.**
+- **Conclusion:** OUC-CGE's train/val/test assignment does not separate
+  recording sessions; every Phase 3 number computed correctly given the data as
+  split, but the split itself is confounded with near-duplicate leakage. This is
+  a data-integrity finding requiring a project-level decision (re-split by
+  session? treat OUC-CGE results as unreliable pending a fix? both?) before
+  Phase 4 can proceed meaningfully. **Not logged as a phase gate PASS/FAIL** —
+  this audit doesn't have a go/no-go criterion; it surfaces a finding for
+  discussion.
