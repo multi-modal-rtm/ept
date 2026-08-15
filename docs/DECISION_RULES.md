@@ -171,6 +171,18 @@ finding that persistence does not help, rather than leaving it ambiguous.
 separately dated commit below, computed once the test-split purity pass runs, not tuned. This
 commit's text above is not edited by that follow-up.
 
+### 2026-08-15 — Purity distribution computed (immediate, same-session follow-up to the above)
+
+Detection-only pass over all 2610 MELD test clips (`scripts/meld_test_purity.py`), 767.1s wall clock,
+30 workers. No labels touched.
+
+- `purity_mean = 0.8493`, `purity_median = 0.8608`.
+- Tercile cutpoints: `p33 = 0.8008`, `p67 = 0.9067`.
+- Tercile counts: low (`purity < 0.8008`) = 870, mid = 870, high (`purity >= 0.9067`) = 870 — exact
+  thirds of 2610, confirming the percentile split is clean with no ties landing on a cutpoint.
+
+Full results (per-clip purity, detection counts): `outputs/meld_purity/test_purity.json`.
+
 ### 2026-08-15 — Seeds extended 3 -> 5
 
 Seeds extended from `{42, 1337, 2024}` to `{42, 1337, 2024, 7, 31337}` for all future reported
