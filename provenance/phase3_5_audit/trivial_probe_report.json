@@ -1,0 +1,14 @@
+{
+  "ouccge": {
+    "name": "OUC-CGE (3-class engagement)",
+    "n_train": 6160,
+    "n_val": 769,
+    "val_macro_f1": 0.9748393594849606
+  },
+  "daisee_engagement": {
+    "name": "DAiSEE (4-class Engagement, subject-disjoint)",
+    "n_train": 5358,
+    "n_val": 1429,
+    "val_macro_f1": 0.21768290030608967
+  }
+}

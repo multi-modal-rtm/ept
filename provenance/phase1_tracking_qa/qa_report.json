@@ -1,0 +1,42 @@
+{
+  "overall": {
+    "n_clips": 7700,
+    "tracks_per_clip_mean": 8.231168831168832,
+    "tracks_per_clip_median": 8.0,
+    "tracks_per_clip_p90": 11.0,
+    "frame_coverage_per_track_mean": 0.7672276231382062,
+    "frame_coverage_per_track_median": 1.0,
+    "gate_pass_pct": 98.53246753246752,
+    "fragment_proxy_mean_distinct_tracks_per_clip": 8.231168831168832
+  },
+  "low": {
+    "n_clips": 3024,
+    "tracks_per_clip_mean": 8.171296296296296,
+    "tracks_per_clip_median": 8.0,
+    "tracks_per_clip_p90": 11.0,
+    "frame_coverage_per_track_mean": 0.7581466303493913,
+    "frame_coverage_per_track_median": 0.96875,
+    "gate_pass_pct": 100.0,
+    "fragment_proxy_mean_distinct_tracks_per_clip": 8.171296296296296
+  },
+  "mid": {
+    "n_clips": 2041,
+    "tracks_per_clip_mean": 8.088682018618325,
+    "tracks_per_clip_median": 8.0,
+    "tracks_per_clip_p90": 11.0,
+    "frame_coverage_per_track_mean": 0.8063223853959379,
+    "frame_coverage_per_track_median": 1.0,
+    "gate_pass_pct": 100.0,
+    "fragment_proxy_mean_distinct_tracks_per_clip": 8.088682018618325
+  },
+  "high": {
+    "n_clips": 2635,
+    "tracks_per_clip_mean": 8.410246679316888,
+    "tracks_per_clip_median": 8.0,
+    "tracks_per_clip_p90": 12.0,
+    "frame_coverage_per_track_mean": 0.7482291980535408,
+    "frame_coverage_per_track_median": 0.96875,
+    "gate_pass_pct": 95.71157495256168,
+    "fragment_proxy_mean_distinct_tracks_per_clip": 8.410246679316888
+  }
+}

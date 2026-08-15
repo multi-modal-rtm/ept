@@ -1,0 +1,1877 @@
+{
+  "n_clips": 7700,
+  "cumulative_track_count_histogram": {
+    "0": 113,
+    "3": 2,
+    "4": 63,
+    "5": 238,
+    "6": 1079,
+    "7": 1677,
+    "8": 1584,
+    "9": 1074,
+    "10": 680,
+    "11": 451,
+    "12": 333,
+    "13": 208,
+    "14": 109,
+    "15": 50,
+    "16": 22,
+    "17": 14,
+    "18": 3
+  },
+  "cumulative_mean": 8.231168831168832,
+  "cumulative_median": 8.0,
+  "cumulative_p90": 11.0,
+  "cumulative_max": 18,
+  "n_exceeding_e_max_cumulative": 2944,
+  "pct_exceeding_e_max_cumulative": 38.23376623376623,
+  "peak_simultaneous_histogram": {
+    "0": 113,
+    "3": 2,
+    "4": 73,
+    "5": 327,
+    "6": 1617,
+    "7": 2542,
+    "8": 1561,
+    "9": 600,
+    "10": 411,
+    "11": 282,
+    "12": 137,
+    "13": 26,
+    "14": 7,
+    "15": 2
+  },
+  "peak_simultaneous_mean": 7.355714285714286,
+  "peak_simultaneous_median": 7.0,
+  "peak_simultaneous_p90": 10.0,
+  "peak_simultaneous_max": 15,
+  "n_exceeding_e_max_simultaneous": 1465,
+  "pct_exceeding_e_max_simultaneous": 19.025974025974026,
+  "top20_clips": [
+    {
+      "clip_id": "low_view953",
+      "class_name": "low",
+      "split": "test",
+      "n_tracks_cumulative": 18,
+      "peak_simultaneous": 12,
+      "n_dropped": 10,
+      "dropped": [
+        {
+          "track_id": 11,
+          "coverage": 0.6875,
+          "mean_conf": 0.4451168111779473,
+          "score": 0.30601780768483877,
+          "co_occurring_frames": 22,
+          "n_frames_present": 22,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 5,
+          "coverage": 0.34375,
+          "mean_conf": 0.515459580854936,
+          "score": 0.17718923091888428,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.21875,
+          "mean_conf": 0.5088465511798859,
+          "score": 0.11131018307060003,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.1875,
+          "mean_conf": 0.47954078018665314,
+          "score": 0.08991389628499746,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 4,
+          "coverage": 0.125,
+          "mean_conf": 0.6992170661687851,
+          "score": 0.08740213327109814,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 8,
+          "coverage": 0.09375,
+          "mean_conf": 0.7222783267498016,
+          "score": 0.0677135931327939,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.09375,
+          "mean_conf": 0.4598613778750102,
+          "score": 0.043112004175782204,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 18,
+          "coverage": 0.09375,
+          "mean_conf": 0.31770286957422894,
+          "score": 0.02978464402258396,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.0625,
+          "mean_conf": 0.32220083475112915,
+          "score": 0.020137552171945572,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.03125,
+          "mean_conf": 0.4286043643951416,
+          "score": 0.013393886387348175,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "high_view2550",
+      "class_name": "high",
+      "split": "train",
+      "n_tracks_cumulative": 18,
+      "peak_simultaneous": 11,
+      "n_dropped": 10,
+      "dropped": [
+        {
+          "track_id": 14,
+          "coverage": 0.4375,
+          "mean_conf": 0.5849602669477463,
+          "score": 0.255920116789639,
+          "co_occurring_frames": 14,
+          "n_frames_present": 14,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.375,
+          "mean_conf": 0.5125232761104902,
+          "score": 0.1921962285414338,
+          "co_occurring_frames": 12,
+          "n_frames_present": 12,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 4,
+          "coverage": 0.25,
+          "mean_conf": 0.49818384647369385,
+          "score": 0.12454596161842346,
+          "co_occurring_frames": 8,
+          "n_frames_present": 8,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 18,
+          "coverage": 0.1875,
+          "mean_conf": 0.5836702287197113,
+          "score": 0.10943816788494587,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.28125,
+          "mean_conf": 0.3262530399693383,
+          "score": 0.0917586674913764,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.21875,
+          "mean_conf": 0.3951026882444109,
+          "score": 0.08642871305346489,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.1875,
+          "mean_conf": 0.37435022989908856,
+          "score": 0.0701906681060791,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.15625,
+          "mean_conf": 0.4153516888618469,
+          "score": 0.06489870138466358,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.125,
+          "mean_conf": 0.32206518203020096,
+          "score": 0.04025814775377512,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.09375,
+          "mean_conf": 0.347694198290507,
+          "score": 0.03259633108973503,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view53",
+      "class_name": "mid",
+      "split": "train",
+      "n_tracks_cumulative": 18,
+      "peak_simultaneous": 14,
+      "n_dropped": 10,
+      "dropped": [
+        {
+          "track_id": 14,
+          "coverage": 0.75,
+          "mean_conf": 0.4228608434398969,
+          "score": 0.3171456325799227,
+          "co_occurring_frames": 24,
+          "n_frames_present": 24,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.59375,
+          "mean_conf": 0.5196048570306677,
+          "score": 0.308515383861959,
+          "co_occurring_frames": 19,
+          "n_frames_present": 19,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.4375,
+          "mean_conf": 0.639686644077301,
+          "score": 0.2798629067838192,
+          "co_occurring_frames": 14,
+          "n_frames_present": 14,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 4,
+          "coverage": 0.5,
+          "mean_conf": 0.48367841355502605,
+          "score": 0.24183920677751303,
+          "co_occurring_frames": 16,
+          "n_frames_present": 16,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.59375,
+          "mean_conf": 0.33990595842662613,
+          "score": 0.20181916281580928,
+          "co_occurring_frames": 19,
+          "n_frames_present": 19,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.34375,
+          "mean_conf": 0.5056360553611409,
+          "score": 0.17381239403039217,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.375,
+          "mean_conf": 0.3692159429192543,
+          "score": 0.13845597859472036,
+          "co_occurring_frames": 12,
+          "n_frames_present": 12,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 18,
+          "coverage": 0.28125,
+          "mean_conf": 0.4382283588250478,
+          "score": 0.1232517259195447,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.21875,
+          "mean_conf": 0.37581009949956623,
+          "score": 0.08220845926553011,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.125,
+          "mean_conf": 0.34799161553382874,
+          "score": 0.04349895194172859,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "high_view2333",
+      "class_name": "high",
+      "split": "test",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 11,
+          "coverage": 0.375,
+          "mean_conf": 0.5638412237167358,
+          "score": 0.21144045889377594,
+          "co_occurring_frames": 12,
+          "n_frames_present": 12,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 6,
+          "coverage": 0.4375,
+          "mean_conf": 0.4435368925333023,
+          "score": 0.19404739048331976,
+          "co_occurring_frames": 14,
+          "n_frames_present": 14,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.28125,
+          "mean_conf": 0.5087647140026093,
+          "score": 0.14309007581323385,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.28125,
+          "mean_conf": 0.48609400126669144,
+          "score": 0.13671393785625696,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.25,
+          "mean_conf": 0.5071095786988735,
+          "score": 0.12677739467471838,
+          "co_occurring_frames": 8,
+          "n_frames_present": 8,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.21875,
+          "mean_conf": 0.32433924078941345,
+          "score": 0.07094920892268419,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.1875,
+          "mean_conf": 0.3561415026585261,
+          "score": 0.06677653174847364,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.15625,
+          "mean_conf": 0.4133916974067688,
+          "score": 0.06459245271980762,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.09375,
+          "mean_conf": 0.3952134847640991,
+          "score": 0.03705126419663429,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view185",
+      "class_name": "mid",
+      "split": "test",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 14,
+          "coverage": 0.6875,
+          "mean_conf": 0.4393010532314127,
+          "score": 0.30201947409659624,
+          "co_occurring_frames": 22,
+          "n_frames_present": 22,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.53125,
+          "mean_conf": 0.36377638753722696,
+          "score": 0.19325620587915182,
+          "co_occurring_frames": 17,
+          "n_frames_present": 17,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.5,
+          "mean_conf": 0.37235543690621853,
+          "score": 0.18617771845310926,
+          "co_occurring_frames": 16,
+          "n_frames_present": 16,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.34375,
+          "mean_conf": 0.3518806072798642,
+          "score": 0.12095895875245331,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.21875,
+          "mean_conf": 0.32965159841946196,
+          "score": 0.0721112871542573,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.1875,
+          "mean_conf": 0.344925860563914,
+          "score": 0.06467359885573387,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.125,
+          "mean_conf": 0.3778208941221237,
+          "score": 0.047227611765265465,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.125,
+          "mean_conf": 0.3374384865164757,
+          "score": 0.04217981081455946,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.09375,
+          "mean_conf": 0.3474440773328145,
+          "score": 0.03257288224995136,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view45",
+      "class_name": "mid",
+      "split": "test",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 11,
+          "coverage": 0.84375,
+          "mean_conf": 0.3698855417746085,
+          "score": 0.3120909258723259,
+          "co_occurring_frames": 27,
+          "n_frames_present": 27,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.53125,
+          "mean_conf": 0.41354810315019946,
+          "score": 0.21969742979854345,
+          "co_occurring_frames": 17,
+          "n_frames_present": 17,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 5,
+          "coverage": 0.28125,
+          "mean_conf": 0.4588860869407654,
+          "score": 0.12906171195209026,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.34375,
+          "mean_conf": 0.3668502758849751,
+          "score": 0.12610478233546019,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.28125,
+          "mean_conf": 0.4414937761094835,
+          "score": 0.12417012453079224,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.21875,
+          "mean_conf": 0.39632957748004366,
+          "score": 0.08669709507375956,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.15625,
+          "mean_conf": 0.40305969715118406,
+          "score": 0.06297807767987251,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.125,
+          "mean_conf": 0.4743430092930794,
+          "score": 0.05929287616163492,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.03125,
+          "mean_conf": 0.4198250472545624,
+          "score": 0.013119532726705074,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "high_view2262",
+      "class_name": "high",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 10,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 16,
+          "coverage": 0.28125,
+          "mean_conf": 0.47496262854999965,
+          "score": 0.1335832392796874,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 4,
+          "coverage": 0.28125,
+          "mean_conf": 0.4284622735447354,
+          "score": 0.12050501443445683,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.21875,
+          "mean_conf": 0.4929059829030718,
+          "score": 0.10782318376004696,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.21875,
+          "mean_conf": 0.4780246104512896,
+          "score": 0.1045678835362196,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 1,
+          "coverage": 0.15625,
+          "mean_conf": 0.6089893221855164,
+          "score": 0.09515458159148693,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.21875,
+          "mean_conf": 0.3777559995651245,
+          "score": 0.08263412490487099,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.15625,
+          "mean_conf": 0.3818938910961151,
+          "score": 0.059670920483767986,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.0625,
+          "mean_conf": 0.4181002378463745,
+          "score": 0.026131264865398407,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.0625,
+          "mean_conf": 0.33395253121852875,
+          "score": 0.020872033201158047,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "high_view2291",
+      "class_name": "high",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 13,
+          "coverage": 0.53125,
+          "mean_conf": 0.6124699255999397,
+          "score": 0.32537464797496796,
+          "co_occurring_frames": 17,
+          "n_frames_present": 17,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.84375,
+          "mean_conf": 0.38403053526525144,
+          "score": 0.3240257641300559,
+          "co_occurring_frames": 27,
+          "n_frames_present": 27,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 1,
+          "coverage": 0.40625,
+          "mean_conf": 0.6600036208446209,
+          "score": 0.26812647096812725,
+          "co_occurring_frames": 13,
+          "n_frames_present": 13,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 3,
+          "coverage": 0.40625,
+          "mean_conf": 0.6565386996819422,
+          "score": 0.26671884674578905,
+          "co_occurring_frames": 13,
+          "n_frames_present": 13,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.5,
+          "mean_conf": 0.49571717903018,
+          "score": 0.24785858951509,
+          "co_occurring_frames": 16,
+          "n_frames_present": 16,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.3125,
+          "mean_conf": 0.6375539600849152,
+          "score": 0.199235612526536,
+          "co_occurring_frames": 10,
+          "n_frames_present": 10,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.375,
+          "mean_conf": 0.36095934609572095,
+          "score": 0.13535975478589535,
+          "co_occurring_frames": 12,
+          "n_frames_present": 12,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 2,
+          "coverage": 0.15625,
+          "mean_conf": 0.6321421146392823,
+          "score": 0.09877220541238785,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.15625,
+          "mean_conf": 0.3496206045150757,
+          "score": 0.054628219455480576,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "low_view1025",
+      "class_name": "low",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 10,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 13,
+          "coverage": 0.3125,
+          "mean_conf": 0.5019525676965714,
+          "score": 0.15686017740517855,
+          "co_occurring_frames": 10,
+          "n_frames_present": 10,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 6,
+          "coverage": 0.3125,
+          "mean_conf": 0.46936373710632323,
+          "score": 0.146676167845726,
+          "co_occurring_frames": 10,
+          "n_frames_present": 10,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.25,
+          "mean_conf": 0.5311113521456718,
+          "score": 0.13277783803641796,
+          "co_occurring_frames": 8,
+          "n_frames_present": 8,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.21875,
+          "mean_conf": 0.5134472974709102,
+          "score": 0.11231659632176161,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 8,
+          "coverage": 0.21875,
+          "mean_conf": 0.43822971412113737,
+          "score": 0.0958627499639988,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.1875,
+          "mean_conf": 0.44235419233640033,
+          "score": 0.08294141106307507,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.15625,
+          "mean_conf": 0.4022918403148651,
+          "score": 0.06285810004919767,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.125,
+          "mean_conf": 0.3384941816329956,
+          "score": 0.04231177270412445,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.0625,
+          "mean_conf": 0.2960587739944458,
+          "score": 0.018503673374652863,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "low_view1046",
+      "class_name": "low",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 11,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 14,
+          "coverage": 0.4375,
+          "mean_conf": 0.5312477350234985,
+          "score": 0.2324208840727806,
+          "co_occurring_frames": 14,
+          "n_frames_present": 14,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.34375,
+          "mean_conf": 0.5085387988524004,
+          "score": 0.17481021210551262,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.34375,
+          "mean_conf": 0.4136820381337946,
+          "score": 0.1422032006084919,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.125,
+          "mean_conf": 0.5306902453303337,
+          "score": 0.06633628066629171,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.15625,
+          "mean_conf": 0.3064371347427368,
+          "score": 0.04788080230355263,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.125,
+          "mean_conf": 0.36974554508924484,
+          "score": 0.046218193136155605,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.125,
+          "mean_conf": 0.34309878945350647,
+          "score": 0.04288734868168831,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.09375,
+          "mean_conf": 0.45466851194699603,
+          "score": 0.04262517299503088,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.0625,
+          "mean_conf": 0.3342162072658539,
+          "score": 0.020888512954115868,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "low_view600",
+      "class_name": "low",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 14,
+          "coverage": 0.5625,
+          "mean_conf": 0.397056981921196,
+          "score": 0.22334455233067274,
+          "co_occurring_frames": 18,
+          "n_frames_present": 18,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.6875,
+          "mean_conf": 0.32472083243456756,
+          "score": 0.2232455722987652,
+          "co_occurring_frames": 22,
+          "n_frames_present": 22,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.375,
+          "mean_conf": 0.48584328095118207,
+          "score": 0.18219123035669327,
+          "co_occurring_frames": 12,
+          "n_frames_present": 12,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.34375,
+          "mean_conf": 0.40759657458825543,
+          "score": 0.1401113225147128,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.28125,
+          "mean_conf": 0.31003401345676845,
+          "score": 0.08719706628471613,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.125,
+          "mean_conf": 0.5183616578578949,
+          "score": 0.06479520723223686,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.15625,
+          "mean_conf": 0.36152857542037964,
+          "score": 0.05648883990943432,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.09375,
+          "mean_conf": 0.2956046164035797,
+          "score": 0.027712932787835598,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.03125,
+          "mean_conf": 0.38761040568351746,
+          "score": 0.01211282517760992,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "low_view954",
+      "class_name": "low",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 8,
+          "coverage": 0.75,
+          "mean_conf": 0.4044200008114179,
+          "score": 0.3033150006085634,
+          "co_occurring_frames": 24,
+          "n_frames_present": 24,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.59375,
+          "mean_conf": 0.4544966989441922,
+          "score": 0.2698574149981141,
+          "co_occurring_frames": 19,
+          "n_frames_present": 19,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.53125,
+          "mean_conf": 0.40350929077933817,
+          "score": 0.2143643107265234,
+          "co_occurring_frames": 17,
+          "n_frames_present": 17,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.3125,
+          "mean_conf": 0.5093301504850387,
+          "score": 0.1591656720265746,
+          "co_occurring_frames": 10,
+          "n_frames_present": 10,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.21875,
+          "mean_conf": 0.4446084797382355,
+          "score": 0.09725810494273901,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.09375,
+          "mean_conf": 0.6590128540992737,
+          "score": 0.06178245507180691,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.1875,
+          "mean_conf": 0.2970087081193924,
+          "score": 0.055689132772386074,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.0625,
+          "mean_conf": 0.8303835391998291,
+          "score": 0.05189897119998932,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.03125,
+          "mean_conf": 0.6522651314735413,
+          "score": 0.020383285358548164,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view134",
+      "class_name": "mid",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 11,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 14,
+          "coverage": 0.5,
+          "mean_conf": 0.5459292642772198,
+          "score": 0.2729646321386099,
+          "co_occurring_frames": 16,
+          "n_frames_present": 16,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 4,
+          "coverage": 0.34375,
+          "mean_conf": 0.6677596731619402,
+          "score": 0.22954238764941692,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.4375,
+          "mean_conf": 0.47313604823180605,
+          "score": 0.20699702110141516,
+          "co_occurring_frames": 14,
+          "n_frames_present": 14,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 6,
+          "coverage": 0.34375,
+          "mean_conf": 0.5079614384607836,
+          "score": 0.17461174447089434,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.34375,
+          "mean_conf": 0.35407432642850006,
+          "score": 0.12171304970979689,
+          "co_occurring_frames": 11,
+          "n_frames_present": 11,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.21875,
+          "mean_conf": 0.49255019426345825,
+          "score": 0.10774535499513149,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.28125,
+          "mean_conf": 0.35955777764320374,
+          "score": 0.10112562496215105,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 5,
+          "coverage": 0.09375,
+          "mean_conf": 0.44737834731737774,
+          "score": 0.04194172006100416,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.0625,
+          "mean_conf": 0.39954911172389984,
+          "score": 0.02497181948274374,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view173",
+      "class_name": "mid",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 12,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 11,
+          "coverage": 0.5625,
+          "mean_conf": 0.4781298306253221,
+          "score": 0.2689480297267437,
+          "co_occurring_frames": 18,
+          "n_frames_present": 18,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.59375,
+          "mean_conf": 0.4281127892042461,
+          "score": 0.25419196859002113,
+          "co_occurring_frames": 19,
+          "n_frames_present": 19,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.5625,
+          "mean_conf": 0.3493493265575833,
+          "score": 0.1965089961886406,
+          "co_occurring_frames": 18,
+          "n_frames_present": 18,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.21875,
+          "mean_conf": 0.4527047191347395,
+          "score": 0.09902915731072426,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.1875,
+          "mean_conf": 0.363682155807813,
+          "score": 0.06819040421396494,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.09375,
+          "mean_conf": 0.45932450890541077,
+          "score": 0.04306167270988226,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.0625,
+          "mean_conf": 0.548098236322403,
+          "score": 0.034256139770150185,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.0625,
+          "mean_conf": 0.30036380887031555,
+          "score": 0.018772738054394722,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.03125,
+          "mean_conf": 0.35474103689193726,
+          "score": 0.01108565740287304,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view195",
+      "class_name": "mid",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 13,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 3,
+          "coverage": 0.65625,
+          "mean_conf": 0.4568322315102532,
+          "score": 0.29979615192860365,
+          "co_occurring_frames": 21,
+          "n_frames_present": 21,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.59375,
+          "mean_conf": 0.3981121668690129,
+          "score": 0.2363790990784764,
+          "co_occurring_frames": 19,
+          "n_frames_present": 19,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.40625,
+          "mean_conf": 0.48190585466531605,
+          "score": 0.19577425345778465,
+          "co_occurring_frames": 13,
+          "n_frames_present": 13,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.4375,
+          "mean_conf": 0.36984815342085703,
+          "score": 0.16180856712162495,
+          "co_occurring_frames": 14,
+          "n_frames_present": 14,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 2,
+          "coverage": 0.28125,
+          "mean_conf": 0.4268202284971873,
+          "score": 0.12004318926483393,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 0.3125,
+          "mean_conf": 0.33861673772335055,
+          "score": 0.10581773053854704,
+          "co_occurring_frames": 10,
+          "n_frames_present": 10,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.21875,
+          "mean_conf": 0.3704555630683899,
+          "score": 0.08103715442121029,
+          "co_occurring_frames": 7,
+          "n_frames_present": 7,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.09375,
+          "mean_conf": 0.31050172448158264,
+          "score": 0.029109536670148373,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.0625,
+          "mean_conf": 0.4441371113061905,
+          "score": 0.027758569456636906,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view57",
+      "class_name": "mid",
+      "split": "train",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 15,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 10,
+          "coverage": 0.90625,
+          "mean_conf": 0.445772725960304,
+          "score": 0.4039815329015255,
+          "co_occurring_frames": 29,
+          "n_frames_present": 29,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 5,
+          "coverage": 0.90625,
+          "mean_conf": 0.4113445836922218,
+          "score": 0.372781028971076,
+          "co_occurring_frames": 29,
+          "n_frames_present": 29,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.5625,
+          "mean_conf": 0.5804092437028885,
+          "score": 0.3264801995828748,
+          "co_occurring_frames": 18,
+          "n_frames_present": 18,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.40625,
+          "mean_conf": 0.5638685753712287,
+          "score": 0.22907160874456167,
+          "co_occurring_frames": 13,
+          "n_frames_present": 13,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.46875,
+          "mean_conf": 0.37635812560717263,
+          "score": 0.17641787137836218,
+          "co_occurring_frames": 15,
+          "n_frames_present": 15,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.125,
+          "mean_conf": 0.44550294429063797,
+          "score": 0.055687868036329746,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.125,
+          "mean_conf": 0.3187805414199829,
+          "score": 0.039847567677497864,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.0625,
+          "mean_conf": 0.3230936676263809,
+          "score": 0.020193354226648808,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.03125,
+          "mean_conf": 0.4560301601886749,
+          "score": 0.014250942505896091,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "high_view2233",
+      "class_name": "high",
+      "split": "val",
+      "n_tracks_cumulative": 17,
+      "peak_simultaneous": 10,
+      "n_dropped": 9,
+      "dropped": [
+        {
+          "track_id": 8,
+          "coverage": 0.65625,
+          "mean_conf": 0.3948111023221697,
+          "score": 0.2590947858989239,
+          "co_occurring_frames": 21,
+          "n_frames_present": 21,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.375,
+          "mean_conf": 0.6406331782539686,
+          "score": 0.2402374418452382,
+          "co_occurring_frames": 12,
+          "n_frames_present": 12,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.25,
+          "mean_conf": 0.4838300794363022,
+          "score": 0.12095751985907555,
+          "co_occurring_frames": 8,
+          "n_frames_present": 8,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.1875,
+          "mean_conf": 0.49424348771572113,
+          "score": 0.09267065394669771,
+          "co_occurring_frames": 6,
+          "n_frames_present": 6,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 17,
+          "coverage": 0.125,
+          "mean_conf": 0.3610832691192627,
+          "score": 0.04513540863990784,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.09375,
+          "mean_conf": 0.43642835815747577,
+          "score": 0.040915158577263355,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.0625,
+          "mean_conf": 0.5441395193338394,
+          "score": 0.034008719958364964,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.09375,
+          "mean_conf": 0.3446371853351593,
+          "score": 0.032309736125171185,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.09375,
+          "mean_conf": 0.32326576113700867,
+          "score": 0.030306165106594563,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "low_view927",
+      "class_name": "low",
+      "split": "test",
+      "n_tracks_cumulative": 16,
+      "peak_simultaneous": 15,
+      "n_dropped": 8,
+      "dropped": [
+        {
+          "track_id": 10,
+          "coverage": 0.9375,
+          "mean_conf": 0.3493589848279953,
+          "score": 0.3275240482762456,
+          "co_occurring_frames": 30,
+          "n_frames_present": 30,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.84375,
+          "mean_conf": 0.38594466668588145,
+          "score": 0.32564081251621246,
+          "co_occurring_frames": 27,
+          "n_frames_present": 27,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.75,
+          "mean_conf": 0.3847016580402851,
+          "score": 0.28852624353021383,
+          "co_occurring_frames": 24,
+          "n_frames_present": 24,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.5625,
+          "mean_conf": 0.42456405527061886,
+          "score": 0.2388172810897231,
+          "co_occurring_frames": 18,
+          "n_frames_present": 18,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 8,
+          "coverage": 0.75,
+          "mean_conf": 0.3138550631701946,
+          "score": 0.23539129737764597,
+          "co_occurring_frames": 24,
+          "n_frames_present": 24,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.40625,
+          "mean_conf": 0.36770031314629775,
+          "score": 0.14937825221568346,
+          "co_occurring_frames": 13,
+          "n_frames_present": 13,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.125,
+          "mean_conf": 0.3491344377398491,
+          "score": 0.043641804717481136,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.09375,
+          "mean_conf": 0.3279409507910411,
+          "score": 0.0307444641366601,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view25",
+      "class_name": "mid",
+      "split": "test",
+      "n_tracks_cumulative": 16,
+      "peak_simultaneous": 12,
+      "n_dropped": 8,
+      "dropped": [
+        {
+          "track_id": 9,
+          "coverage": 0.96875,
+          "mean_conf": 0.40309386868630687,
+          "score": 0.39049718528985977,
+          "co_occurring_frames": 31,
+          "n_frames_present": 31,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 10,
+          "coverage": 0.8125,
+          "mean_conf": 0.3973624316545633,
+          "score": 0.3228569757193327,
+          "co_occurring_frames": 26,
+          "n_frames_present": 26,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.28125,
+          "mean_conf": 0.39610880944463944,
+          "score": 0.11140560265630484,
+          "co_occurring_frames": 9,
+          "n_frames_present": 9,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 11,
+          "coverage": 0.125,
+          "mean_conf": 0.37755439430475235,
+          "score": 0.047194299288094044,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.09375,
+          "mean_conf": 0.4305129647254944,
+          "score": 0.0403605904430151,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.09375,
+          "mean_conf": 0.42708107829093933,
+          "score": 0.04003885108977556,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.0625,
+          "mean_conf": 0.3720986694097519,
+          "score": 0.023256166838109493,
+          "co_occurring_frames": 2,
+          "n_frames_present": 2,
+          "label": "ambiguous"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.03125,
+          "mean_conf": 0.41076457500457764,
+          "score": 0.012836392968893051,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    },
+    {
+      "clip_id": "mid_view56",
+      "class_name": "mid",
+      "split": "test",
+      "n_tracks_cumulative": 16,
+      "peak_simultaneous": 14,
+      "n_dropped": 8,
+      "dropped": [
+        {
+          "track_id": 11,
+          "coverage": 0.96875,
+          "mean_conf": 0.4385254527291944,
+          "score": 0.42482153233140707,
+          "co_occurring_frames": 31,
+          "n_frames_present": 31,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 14,
+          "coverage": 0.90625,
+          "mean_conf": 0.44092037965511455,
+          "score": 0.39958409406244755,
+          "co_occurring_frames": 29,
+          "n_frames_present": 29,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 9,
+          "coverage": 1.0,
+          "mean_conf": 0.3717310531064868,
+          "score": 0.3717310531064868,
+          "co_occurring_frames": 32,
+          "n_frames_present": 32,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 16,
+          "coverage": 0.3125,
+          "mean_conf": 0.3552945077419281,
+          "score": 0.11102953366935253,
+          "co_occurring_frames": 10,
+          "n_frames_present": 10,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 7,
+          "coverage": 0.15625,
+          "mean_conf": 0.35644530057907103,
+          "score": 0.05569457821547985,
+          "co_occurring_frames": 5,
+          "n_frames_present": 5,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 13,
+          "coverage": 0.125,
+          "mean_conf": 0.42714204639196396,
+          "score": 0.053392755798995495,
+          "co_occurring_frames": 4,
+          "n_frames_present": 4,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 15,
+          "coverage": 0.09375,
+          "mean_conf": 0.3592372536659241,
+          "score": 0.03367849253118038,
+          "co_occurring_frames": 3,
+          "n_frames_present": 3,
+          "label": "whole-person-like"
+        },
+        {
+          "track_id": 12,
+          "coverage": 0.03125,
+          "mean_conf": 0.40079495310783386,
+          "score": 0.012524842284619808,
+          "co_occurring_frames": 1,
+          "n_frames_present": 1,
+          "label": "ambiguous"
+        }
+      ]
+    }
+  ],
+  "top20_n_also_exceed_simultaneous": 20,
+  "dropped_label_counts": {
+    "whole-person-like": 159,
+    "ambiguous": 21
+  }
+}
