@@ -21,7 +21,11 @@ from ept.train.dataset import OUCCGEDataset
 REPO_ROOT = "/home/devops/ept"
 
 
-def build_model(condition, dropout):
+def build_model(condition, dropout, e_max=8, s=8):
+    """e_max/s only matter for mask_only (its input layer is E*S-shaped, since it
+    consumes the flattened presence mask directly, not pooled/attended features).
+    Every other condition's parameter count depends only on the shared D=1536
+    feature dim, not on E/S, so the defaults (OUC-CGE's 8x8) are inert for them."""
     if condition == "A0":
         return EPTFormer(dropout=dropout, use_temporal=True, use_social=True)
     if condition in ("A1", "A2"):
@@ -33,7 +37,7 @@ def build_model(condition, dropout):
     if condition == "A5":
         return MeanPoolMLP(dropout=dropout)
     if condition == "mask_only":
-        return MaskOnlyMLP(dropout=dropout)
+        return MaskOnlyMLP(e_max=e_max, s=s, dropout=dropout)
     raise ValueError(f"unknown condition {condition!r}")
 
 

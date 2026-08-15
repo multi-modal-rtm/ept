@@ -16,6 +16,7 @@ import torch
 import yaml
 
 from ept.model.ept_former import assert_no_backbone_params
+from ept.tokenization.extract_features_meld import MELD_PRIMARY_E_MAX, S as MELD_S
 from ept.train.dataset_meld import MELDDataset
 from ept.train.train import build_model, run_epoch, to_device
 
@@ -56,7 +57,9 @@ def main():
             os.makedirs(results_dir, exist_ok=True)
 
             torch.manual_seed(SEARCH_SEED)
-            model = build_model(condition, recipe["dropout"]).to(device)
+            model = build_model(
+                condition, recipe["dropout"], e_max=MELD_PRIMARY_E_MAX, s=MELD_S
+            ).to(device)
             assert_no_backbone_params(model)
             optimizer = torch.optim.AdamW(
                 model.parameters(), lr=recipe["lr"], weight_decay=recipe["weight_decay"]
