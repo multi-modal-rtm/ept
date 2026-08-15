@@ -267,3 +267,50 @@
   pre-specified.
 - **Result:** PASS (recipe-lock gate). Phase 4 (locked-config × 5-seed run,
   test touched exactly once) not yet started — separate, later gate event.
+
+## Pre-Phase-4 prep: hardcode audit + emotion calibration endpoint
+
+- **Date:** 2026-08-15T08:07:37Z
+- **Task (user):** Two tasks before Phase 4, neither touching test. (1) Grep
+  `src/` for OUC-CGE-geometry literals that survived into MELD without crashing.
+  (2) Pre-register and run a 7-class MELD emotion secondary calibration
+  endpoint, since A6's search found no same-task sentiment baseline but did
+  find same-task emotion ones.
+- **Hardcode sweep**: grepped `src/ept/` for `8`/`16`/`64`/`4` in shape/slice/
+  reshape/view/dimension contexts. Two real findings:
+  - `MaskOnlyMLP(e_max=8, s=8)` — the crash already found and fixed in the
+    prior gate (`44122ca`). Confirmed no other instance of this pattern
+    crashed silently instead.
+  - `EPTFormer(s_max=8)` default — **not** overridden anywhere in the MELD
+    recipe-search path (`build_model()` only forwarded `e_max`/`s` to
+    `MaskOnlyMLP`). Did not crash and did not corrupt results: verified by
+    direct computation that `SinusoidalSegmentEmbedding`'s sliced output is
+    bitwise-identical regardless of unused table headroom (it's a fixed,
+    non-learned buffer indexed by absolute position, not relative to table
+    size) — confirmed `torch.equal(pe_maxs8[:4], pe_maxs4[:4])` is `True`.
+    Also verified a future `S > s_max` fails loudly (`RuntimeError` on the
+    `.view()` reshape) rather than silently truncating. Hardened anyway
+    (`f2571d0`): `build_model()` now forwards `s_max` explicitly for every
+    `EPTFormer`-based condition, so this stops being "safe by an unexamined
+    invariant" and starts being "correct by construction." All 13 tests still
+    pass after the change; the already-locked recipe table (`6b7fae0`) is
+    numerically unaffected by construction, not just by assumption.
+  - Also flagged, not fixed (out of scope for "neither touches test," and
+    Phase 4 hasn't started): `train.py`'s hydra `main()` is still hardcoded to
+    `OUCCGEDataset` — a MELD-equivalent entry point needs to exist before
+    Phase 4's locked-config run reuses this path, or it will silently train on
+    the wrong dataset rather than crash.
+- **7-class emotion calibration** (`f2571d0` amendment, `e6a1291` computed
+  numbers): A0/A1/A2 + trivial probe, dev only, locked recipe reused unchanged
+  (no new search). Results (macro-F1 / weighted-F1): A0 0.1732/0.2990, A1
+  0.1958/0.3235, A2 0.1719/0.3372, trivial probe 0.1748/0.2890, majority-class
+  0.0850/0.2518, stratified-random macro-F1 (K=7) 0.1429. Published video-only
+  MELD-emotion weighted-F1 range located and cited (`docs/PLAN.md` §5):
+  25.18%–61.4% (61.4% an unverified-metric outlier; 37.9–41.8% the more
+  comparable feature-based cluster). **Verdict: calibrated, not alarming.** A1
+  clears every internal floor (majority, stratified-random, trivial probe) by
+  a comfortable margin; it sits modestly below the closest-matched published
+  cluster, which is expected (untuned, sentiment-locked recipe on a harder,
+  more imbalanced task never searched for it), not evidence of a pipeline bug.
+- **Result:** PASS. No blocker for Phase 4 found; one action item recorded
+  (MELD training entry point still needs building before Phase 4, see above).
