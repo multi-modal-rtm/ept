@@ -65,12 +65,16 @@ def aligned_arrays(condition_a, condition_b, seed):
 
 
 def paired_bootstrap_margin(condition_a, condition_b, n_bootstrap=N_BOOTSTRAP, seed_for_resample=0,
-                             clip_id_filter=None):
+                             clip_id_filter=None, seeds=None):
     """Returns (mean_margin_across_seeds, ci_low, ci_high, per_seed_macro_f1_a,
     per_seed_macro_f1_b, per_seed_margin). clip_id_filter, if given, restricts
-    to that subset of clip_ids (used for the purity-tercile stratification)."""
+    to that subset of clip_ids (used for the purity-tercile stratification).
+    seeds, if given, overrides the full SEEDS list (used for leave-one-seed-out
+    sensitivity -- post hoc, re-reads the same predictions.json files, does not
+    retrain or re-touch test)."""
+    seeds = seeds if seeds is not None else SEEDS
     per_seed = []
-    for seed in SEEDS:
+    for seed in seeds:
         clip_ids, labels, preds_a, preds_b = aligned_arrays(condition_a, condition_b, seed)
         if clip_id_filter is not None:
             keep = np.array([cid in clip_id_filter for cid in clip_ids])
@@ -92,7 +96,7 @@ def paired_bootstrap_margin(condition_a, condition_b, n_bootstrap=N_BOOTSTRAP, s
     boot_margins = np.empty(n_bootstrap, dtype=np.float64)
     for b in range(n_bootstrap):
         resample_idx = rng.randint(0, n_items, size=n_items)
-        seed_margins_b = np.empty(len(SEEDS), dtype=np.float64)
+        seed_margins_b = np.empty(len(seeds), dtype=np.float64)
         for si, ps in enumerate(per_seed):
             y = ps["labels"][resample_idx]
             pa = ps["preds_a"][resample_idx]
