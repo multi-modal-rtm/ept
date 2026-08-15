@@ -370,7 +370,12 @@ def build_manifest():
 
 
 if __name__ == "__main__":
-    ouccge_clips = list(iter_ouccge_clips())
+    ouccge_clips = list(iter_ouccge_clips())  # e_max=OUCCGE_E_MAX=16
     run_extraction(ouccge_clips, n_workers=8,
                     log_path="/home/devops/ept/outputs/phase2_extract_features/ouccge_run.json")
+
+    daisee_clips = list(iter_daisee_clips())  # e_max=LOCKED_PRIMARY_E_MAX=8
+    run_extraction(daisee_clips, n_workers=8,
+                    log_path="/home/devops/ept/outputs/phase2_extract_features/daisee_run.json")
+
     build_manifest()
