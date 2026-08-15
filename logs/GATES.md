@@ -220,3 +220,50 @@
   contrary to the plausible speaking-tracks-onscreen hypothesis. Reported plainly.
 - **Result:** PASS (tokenization + cache gate, mirroring Phase 2's manifest/
   checksum/spot-verify/backup criteria).
+
+## MELD Phase 3 — purity-stratified prep, A6 literature search, recipe lock
+
+- **Date:** 2026-08-15T07:09:48Z
+- **Task (user):** "Phase 3 for MELD. No test evaluation." Two pre-specified
+  additions (amend `docs/DECISION_RULES.md` before any run): purity-stratified
+  secondary analysis (test-split terciles), and seeds extended 3→5 with
+  `EFFECT_FLOOR` frozen at 0.04 (not recomputed). Frozen search grid, dev-only
+  recipe selection, trivial-floor (0.4155) standing row, A6 as a genuinely
+  sourced literature reference (not estimated).
+- **`docs/DECISION_RULES.md` amended, two commits**, procedure fixed before each
+  number was computed: `fbee42e` (purity-stratified analysis pre-specified +
+  seeds extended, terciles left TBD) then `0102944` (purity distribution
+  computed as a non-editing append: mean 0.8493, terciles at p33=0.8008/
+  p67=0.9067, exact thirds — 870/870/870 of 2610 test clips). Detection-only
+  pass, no labels touched (`scripts/meld_test_purity.py`, 767.1s, 30 workers).
+- **A6 literature search** (`5423b5f`, amends `docs/PLAN.md` §5): no citable
+  video-only **3-class sentiment** MELD baseline exists in the published
+  literature — MELD's own paper explicitly excludes video baselines ("video-
+  based speaker identification and localization is an open problem"), and every
+  downstream video-only ablation located is for the *7-class emotion* task
+  instead. Reported as a gap (mirroring the missing VideoMAE linear-probe row),
+  not filled with a task-mismatched number.
+- **Frozen search grid**: `docs/SEARCH_GRID_MELD.md` (`c87d939`), OUC-CGE's
+  8-point grid reused verbatim, kept at 8 points per instruction (noting the
+  stated premise that MELD dev is smaller than OUC-CGE val is factually
+  backwards — MELD dev is 1108, OUC-CGE val was 769 — without changing the
+  actionable instruction).
+- **Recipe search**: 56 runs, 2100 dev evaluations, dev split only. One bug
+  found and fixed mid-run (`44122ca`): `MaskOnlyMLP`'s input layer is
+  E×S-shaped and was hardcoded to OUC-CGE's 8×8, crashing on MELD's E=6,S=4
+  geometry after all 48 A0–A5 runs had already completed; fixed by
+  parameterizing `build_model()`, then rerunning only the 8 crashed mask_only
+  points rather than repeating completed work.
+- **Locked recipe**: `docs/LOCKED_RECIPE_MELD.md` (`6b7fae0`). A0–A5 all clear
+  the 0.4155 trivial-feature floor at their best grid point (dev band
+  0.493–0.512); mask-only clears it at none of its 8 points (best 0.2491),
+  consistent with the earlier no-presence-signal finding. Hyperparameters are
+  now read-only.
+- **Zero test evaluations**: `src/ept/train/dataset_meld.py` asserts
+  `split in ("train", "dev")` at construction — there is no code path in this
+  phase's dataset/training/search scripts that can load MELD's test split for
+  anything label-bearing. The one test-split touch this phase makes
+  (`meld_test_purity.py`) is unsupervised and detection-only, exactly as
+  pre-specified.
+- **Result:** PASS (recipe-lock gate). Phase 4 (locked-config × 5-seed run,
+  test touched exactly once) not yet started — separate, later gate event.
