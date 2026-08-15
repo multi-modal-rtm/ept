@@ -191,3 +191,32 @@
   named primary dataset and is not something to resolve unilaterally. Existing
   OUC-CGE Phase 3 numbers should be treated as unreliable and not publishable
   as-is. Not logged as a phase gate PASS/FAIL for the same reason as above.
+
+## MELD promoted to primary — Phase 1/2 equivalent (tokenization + feature cache)
+
+- **Date:** 2026-08-15T05:05:03Z
+- **Decision (user):** MELD is primary; OUC-CGE becomes a rejected-dataset case study.
+  No test evaluation in this work. Full writeup: `outputs/meld_phase1_2_summary/REPORT.md`.
+- **`docs/DECISION_RULES.md` amended in two commits**, procedure fixed before the
+  blind bootstrap ran: `a6d19a8` (OUC-CGE rejection + MELD promotion + effect-floor
+  procedure, number left TBD) then `8c156a9` (computed floor filled in as a
+  non-editing append). **`EFFECT_FLOOR = 0.04`** — the study is underpowered for
+  the originally-hoped 0.02 margin; stated explicitly per the pre-committed rule.
+- **Detector: SCRFD**, evidence-based (bake-off: SCRFD zero-rate 0.94% vs. YOLO
+  0.88%, near parity — unlike OUC-CGE's severe pose-correlated SCRFD failure —
+  plus the architectural requirement that identity clustering needs face crops).
+  Identity recovery: agglomerative/cosine clustering, threshold 0.55 tuned on dev
+  only (purity 62.2% vs. 6-class chance 16.7%).
+- **Tokenization**: 13706 clips (train 9988/dev 1108/test 2610, matching labels
+  exactly), 3783.9s/63.1min, 40 workers — required a mid-run fix (missing
+  `cv2.setNumThreads(1)`, load hit 149 before the fix).
+- **Feature cache**: E_max=8 cached, **primary E=6** (justified by data: median 4,
+  p75=7 distinct identities/clip, `pct<=6=72.35%`), S=4, T=16, grid baseline from
+  the same backbone/pass. 1226.3s/20.4min, 8 workers. `cache/MELD_MANIFEST.json`
+  checksummed; spot-verify 5/5 exact; tarred-then-uploaded to
+  `gdrive:ICFNDS 2026 - EPT/cache_backup_meld/` (1.561 GiB, confirmed).
+- **Mask-only control**: real macro-F1 0.2677 (3-seed mean) is **below** the
+  permutation-null mean (0.2982, p=0.9524) — no detectable presence-mask signal,
+  contrary to the plausible speaking-tracks-onscreen hypothesis. Reported plainly.
+- **Result:** PASS (tokenization + cache gate, mirroring Phase 2's manifest/
+  checksum/spot-verify/backup criteria).
