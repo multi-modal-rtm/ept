@@ -137,3 +137,46 @@ null result under a floor the study could never have cleared as evidence of abse
 - H2 (entity structure). `A1 (EPT) − A0 (grid tokens, matched budget) ≥ 0.04` macro-F1.
 
 Full report: `outputs/meld_effect_floor/effect_floor_report.json`.
+
+### 2026-08-15 — Purity-stratified secondary analysis (pre-specified, before any run)
+
+**Pre-specified secondary analysis, fixed before purity is computed for any clip.** Rationale: the
+clustering threshold tuned in Phase 1 (0.55) achieves 62.2% purity against the 6-character reference
+check — well above chance (16.7%) but far from perfect. This means a null on the pooled test set is
+**ambiguous between two different findings**: "persistence does not help" vs. "identity was not
+recovered well enough to tell." Stratifying by purity distinguishes them — a monotone trend is
+evidence even when the pooled A1−A2 difference misses `EFFECT_FLOOR`.
+
+**Purity metric** (computable without any character-identity ground truth, so it applies to every
+clip, not just the 6 recurring characters used for threshold tuning): per-clip **mean silhouette
+score** (cosine distance) of the agglomerative cluster assignment over that clip's detected face
+embeddings, at the locked threshold (0.55). Clips with fewer than 2 detections or only 1 resulting
+cluster get purity `= 1.0` by convention — there is no cross-identity ambiguity possible in a
+discovered structure with only one identity, so it is trivially "pure." (Embeddings were not
+retained in the production tracking cache to keep it lean — computed via a fresh, detection-only
+pass over the **test split only**, since that is the only split this pre-registered analysis
+stratifies; train/dev do not need this metric for this plan.)
+
+**Pre-specified analysis, secondary, does NOT affect the primary branch decision (§ Decision rule)**:
+split test clips into purity **terciles** (bottom/middle/top third by this score). Report `A1 − A2`
+macro-F1 within each tercile. **Prediction, stated in advance**: if persistence carries real signal,
+the `A1 − A2` gap grows **monotonically** with purity tercile (low-purity tercile closest to null,
+high-purity tercile showing the clearest gap). A monotone trend across the three terciles is treated
+as corroborating evidence for H1 even if the pooled (non-stratified) difference does not clear
+`EFFECT_FLOOR = 0.04`; a flat or non-monotone pattern across terciles is treated as evidence against
+the "identity wasn't recovered well enough" explanation, sharpening a pooled null into a genuine
+finding that persistence does not help, rather than leaving it ambiguous.
+
+**Purity distribution and exact tercile cutpoints = TBD** — filled in by an immediately-following,
+separately dated commit below, computed once the test-split purity pass runs, not tuned. This
+commit's text above is not edited by that follow-up.
+
+### 2026-08-15 — Seeds extended 3 -> 5
+
+Seeds extended from `{42, 1337, 2024}` to `{42, 1337, 2024, 7, 31337}` for all future reported
+numbers (mean ± std, `CLAUDE.md` non-negotiable #6). **`EFFECT_FLOOR` stays at `0.04` — it is
+explicitly NOT recomputed.** Recomputing the floor now, after seeing that 2 more seeds are being
+added, would lower the seed-level variance component using information gathered after the original
+blind bootstrap — exactly what the blind procedure (record dispersion only, never inspect ranking,
+freeze before running) existed to prevent. The added seeds increase the precision of future reported
+means; they cannot retroactively lower the bar a result has to clear.
