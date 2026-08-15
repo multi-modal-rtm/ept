@@ -137,6 +137,33 @@ probed the crude way (no tokenization structure at all, just a linear head on po
 **not** get you the fine-tuned ceiling — which is exactly the regime A0–A5 operate in, and is why the
 frozen-probe number belongs in the table explicitly rather than only the flattering fine-tuned one.
 
+**A6 for MELD (2026-08-15, MELD Phase 3) — no citable number exists; reported as a gap, not
+estimated.** Per the Phase 3-for-MELD task's explicit instruction ("cite published video-only MELD
+sentiment numbers... search for them; do not estimate"), a literature search was run rather than
+computing a new number:
+
+- **MELD's own paper (Poria et al. 2019, arXiv:1810.02508) reports no video/visual baseline at all**,
+  for either the 3-class sentiment task (Table 13) or the 7-class emotion task (Table 11) — both
+  tables report only text, audio, and text+audio. The paper states explicitly: *"For the baselines,
+  we do not use visual features, as video-based speaker identification and localization is an open
+  problem."*
+- A search of downstream MELD papers found **video-only unimodal ablations only for the 7-class
+  EMOTION task**, never the 3-class sentiment task MELD-as-primary uses here. Located numbers (for
+  context only, not usable as A6 — different task, different chance floor, non-comparable visual
+  features):
+  - Rathi et al., *"Quality-Controlled Multimodal Emotion Recognition in Conversations with
+    Identity-Based Transfer Learning and MAMBA Fusion"* (arXiv:2511.14969): vision-only 42.3%
+    accuracy / 41.8% weighted-F1 on MELD emotion (Table II), using 512-d face embeddings from a
+    commercial face-recognition engine fine-tuned on CK+/RAF-DB — not raw video, not DINOv2-derived,
+    and a 7-class rather than 3-class task.
+  - Other located ablations (various papers, all 7-class emotion, weighted-F1): ~40.3%, visual
+    textualization 25.2%, ELR-GNN 60.1% accuracy / 61.4% F1 (highest found, but that paper's visual
+    pipeline and exact protocol were not independently verified here).
+- **Conclusion: A6 for MELD is reported as "not available in the published literature for the
+  3-class sentiment task"** rather than substituting a task-mismatched emotion number under the A6
+  label. This mirrors the VideoMAE linear-probe gap above (row 130): report the absence plainly,
+  do not fabricate or silently repurpose an adjacent-task number to fill the slot.
+
 ---
 
 ## 6. Efficiency protocol
