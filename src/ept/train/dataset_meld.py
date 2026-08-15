@@ -25,6 +25,8 @@ TRACKS_ROOT = "/home/devops/ept/cache/tracks/meld"
 
 
 class MELDDataset(Dataset):
+    DATASET_NAME = "meld"
+
     def __init__(self, split, condition, run_seed=42):
         assert split in ("train", "dev"), (
             f"only train/dev are loadable from this class — got split={split!r}. "
@@ -36,6 +38,10 @@ class MELDDataset(Dataset):
         self.run_seed = run_seed
         self.e_max = MELD_PRIMARY_E_MAX  # 6 — primary condition, regardless of the
         # cache's E_max=8 (mirrors CLAUDE.md "Feature cache E_max" for OUC-CGE).
+        # Recorded so a caller can verify, at construction time, that the dataset it got
+        # is actually the one its config asked for (src/ept/train/train.py's
+        # assert_dataset_matches_config) instead of trusting a hardcoded default.
+        self.features_root = FEATURES_ROOT
 
         tracks_dir = os.path.join(TRACKS_ROOT, split)
         clip_ids, labels = [], []

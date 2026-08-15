@@ -3,8 +3,13 @@ defaults:
   - recipe: r01
   - _self_
 
+# No default: every invocation must pass dataset=ouccge or dataset=meld explicitly
+# (`python train.py dataset=meld ...`). See src/ept/train/train.py's
+# assert_dataset_matches_config -- this is the config half of that check; leaving
+# this on a default would make it possible to silently train on the wrong cache.
+dataset: ???
 seed: 42
-run_id: "${condition.name}_${recipe.name}_seed${seed}"
+run_id: "${dataset}_${condition.name}_${recipe.name}_seed${seed}"
 
 hydra:
   run:

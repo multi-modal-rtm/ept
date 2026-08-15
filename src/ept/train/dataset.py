@@ -38,6 +38,8 @@ class OUCCGEDataset(Dataset):
     indexing; the fixed one-time load cost is paid once per process instead of
     once per epoch."""
 
+    DATASET_NAME = "ouccge"
+
     def __init__(self, split, condition, run_seed=42):
         assert split in ("train", "val"), (
             f"only train/val are loadable from this class — got split={split!r}. "
@@ -49,6 +51,10 @@ class OUCCGEDataset(Dataset):
         self.run_seed = run_seed
         self.e_max = LOCKED_PRIMARY_E_MAX  # 8 — the locked primary condition, always,
         # regardless of the cache's E_max=16 (docs/CLAUDE.md "Feature cache E_max").
+        # Recorded so a caller can verify, at construction time, that the dataset it got
+        # is actually the one its config asked for (src/ept/train/train.py's
+        # assert_dataset_matches_config) instead of trusting a hardcoded default.
+        self.features_root = os.path.join(FEATURES_ROOT, "ouccge")
 
         tracks_dir = os.path.join(TRACKS_ROOT, split)
         clip_ids, labels = [], []
