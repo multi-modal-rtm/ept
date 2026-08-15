@@ -109,3 +109,31 @@ immediately after this commit, blind to which condition scores higher:
 **`EFFECT_FLOOR = TBD`** — filled in by an immediately-following, separately dated commit below,
 computed by the procedure above, run once, not tuned. This commit's text above is not edited by
 that follow-up; the number is appended, not backfilled into this section.
+
+### 2026-08-15 — Effect floor computed (immediate, same-session follow-up to the above)
+
+Bootstrap run per the procedure fixed in the amendment above, in the same working session, blind
+to condition ranking throughout (only dispersion was ever inspected or recorded). Fixed recipe used
+to produce trained models to bootstrap from (not a new locked recipe, not tuned for this purpose):
+`lr=1e-4, weight_decay=0.0, dropout=0.0, epochs=50, batch_size=32` (`docs/SEARCH_GRID.md`'s r07, the
+single most frequently-best point across the OUC-CGE search).
+
+- Seed-level: 3 seeds `{42, 1337, 2024}` per condition (A0–A5, mask-only), pooled variance across
+  conditions: `0.000075`.
+- Item-level: 500-resample bootstrap over MELD dev items on each condition's seed-42 model, pooled
+  variance across conditions: `0.000216`.
+- `pooled_SE = sqrt(0.000075 + 0.000216) = 0.0170`.
+- `EFFECT_FLOOR = max(0.02, 2 x 0.0170) = max(0.02, 0.0341) = 0.0341`, rounded **up** to two
+  decimals: **`EFFECT_FLOOR = 0.04`**.
+
+**The study is underpowered for the originally-hoped-for 0.02 margin** — the natural noise floor at
+this dev-set size (1108 clips) already exceeds it. Per the procedure fixed above, this is stated
+plainly: H1 and H2 will be evaluated against `EFFECT_FLOOR = 0.04`, not 0.02, and if neither
+hypothesis clears 0.04, the paper reports the comparison as underpowered rather than treating a
+null result under a floor the study could never have cleared as evidence of absence.
+
+**H1/H2, with the computed floor substituted:**
+- H1 (persistence). `A1 (EPT) − A2 (identity-shuffled EPT) ≥ 0.04` macro-F1.
+- H2 (entity structure). `A1 (EPT) − A0 (grid tokens, matched budget) ≥ 0.04` macro-F1.
+
+Full report: `outputs/meld_effect_floor/effect_floor_report.json`.
