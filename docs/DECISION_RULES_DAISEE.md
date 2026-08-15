@@ -84,6 +84,32 @@ two conditions instead of seven:
 computed by the procedure above, run once, not tuned. This commit's text above is not edited by
 that follow-up; the number is appended, not backfilled into this section.
 
+### 2026-08-15 — Effect floor computed (immediate, same-session follow-up to the above)
+
+Bootstrap run per the procedure fixed in the amendment above (`scripts/daisee_effect_floor_bootstrap.py`),
+blind to condition ranking throughout (only dispersion was ever inspected or recorded). Fixed
+recipe used to produce trained models to bootstrap from (not a new locked recipe, not tuned for
+this purpose): `lr=1e-4, weight_decay=0.0, dropout=0.0, epochs=50, batch_size=32` (same
+placeholder MELD's own floor bootstrap used).
+
+- Seed-level: 3 seeds `{42, 1337, 2024}` per condition (A0, A1 only), pooled variance across
+  conditions: `0.000069`.
+- Item-level: 500-resample bootstrap over DAiSEE val items on each condition's seed-42 model,
+  pooled variance across conditions: `0.000121`.
+- `pooled_SE = sqrt(0.000069 + 0.000121) = 0.0138`.
+- `EFFECT_FLOOR = max(0.02, 2 x 0.0138) = max(0.02, 0.0275) = 0.0275`, rounded **up** to two
+  decimals: **`EFFECT_FLOOR = 0.03`**.
+
+**The study is underpowered for the originally-hoped-for 0.02 margin**, same finding as MELD's
+own floor computation (which landed at 0.04) — stated plainly per the procedure fixed above.
+H2 will be evaluated against `EFFECT_FLOOR = 0.03`, not 0.02; a null result under that floor is
+reported as underpowered, not as evidence of absence.
+
+**H2, with the computed floor substituted:**
+- H2 (entity structure). `A1 (EPT) − A0 (grid tokens, matched budget) ≥ 0.03` macro-F1.
+
+Full report: `outputs/daisee_effect_floor/effect_floor_report.json`.
+
 ## Locked architecture and protocol
 
 Same architecture as MELD (`EPTFormer`/`MeanPoolMLP`, unchanged, D=384, L=4, 6 heads,
