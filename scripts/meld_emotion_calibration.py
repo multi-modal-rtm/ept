@@ -21,7 +21,7 @@ from ept.model.ept_former import EPTFormer, assert_no_backbone_params
 from ept.tokenization.extract_features_meld import MELD_PRIMARY_E_MAX, S as MELD_S
 from ept.train.dataset_meld_emotion import MELDEmotionDataset
 from ept.train.emotion_labels import NUM_EMOTION_CLASSES
-from ept.train.train import run_epoch, to_device
+from ept.train.train import forward_pass, run_epoch, to_device
 
 REPO_ROOT = "/home/devops/ept"
 CONFIGS_ROOT = os.path.join(REPO_ROOT, "configs")
@@ -34,6 +34,33 @@ TRIVIAL_PROBE_FLOOR_SENTIMENT = 0.4155  # for reference only; not the metric thi
 def load_yaml(path):
     with open(path) as f:
         return yaml.safe_load(f)
+
+
+def eval_both_f1(model, ds, condition, batch_size, device):
+    """Most published MELD emotion baselines report weighted-F1 (the metric
+    the original MELD paper used), not macro-F1 (this project's own metric
+    throughout, chosen for class-imbalance sensitivity). Computing both here
+    rather than only macro-F1 avoids an apples-to-oranges comparison against
+    the literature in the calibration verdict."""
+    import torch as _torch
+    from sklearn.metrics import f1_score
+
+    model.eval()
+    n = len(ds)
+    all_logits, all_labels = [], []
+    with _torch.no_grad():
+        for i in range(0, n, batch_size):
+            idx = _torch.arange(i, min(i + batch_size, n), device=device)
+            feat, mask, label = ds.features[idx], ds.masks[idx], ds.labels[idx]
+            logits = forward_pass(model, condition, feat, mask)
+            all_logits.append(logits)
+            all_labels.append(label)
+    logits = _torch.cat(all_logits).cpu()
+    labels = _torch.cat(all_labels).cpu()
+    preds = logits.argmax(dim=-1)
+    macro_f1 = f1_score(labels.numpy(), preds.numpy(), average="macro")
+    weighted_f1 = f1_score(labels.numpy(), preds.numpy(), average="weighted")
+    return float(macro_f1), float(weighted_f1)
 
 
 def run_condition(condition, device):
@@ -61,6 +88,7 @@ def run_condition(condition, device):
     history = []
     t0 = time.time()
     best_dev_f1, best_epoch = -1.0, -1
+    best_state = None
     for epoch in range(recipe["epochs"]):
         train_loss, train_f1 = run_epoch(
             model, train_ds, condition, recipe["batch_size"], device, optimizer, shuffle=True
@@ -72,21 +100,31 @@ def run_condition(condition, device):
                          "val_loss": dev_loss, "val_macro_f1": dev_f1})
         if dev_f1 > best_dev_f1:
             best_dev_f1, best_epoch = dev_f1, epoch
+            best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
     wall_clock = time.time() - t0
+
+    model.load_state_dict(best_state)
+    best_macro_f1_check, best_weighted_f1 = eval_both_f1(
+        model, dev_ds, condition, recipe["batch_size"], device
+    )
+    assert abs(best_macro_f1_check - best_dev_f1) < 1e-6, (
+        f"best-epoch reload mismatch: {best_macro_f1_check} vs {best_dev_f1}"
+    )
 
     metrics = {
         "run_id": run_id, "condition": condition, "seed": SEED, "task": "meld_emotion_7class",
         "recipe_id": recipe_name, "recipe": recipe, "split_evaluated": "dev",
         "n_train": len(train_ds), "n_dev": len(dev_ds),
         "history": history,
-        "best_dev_macro_f1": best_dev_f1, "best_epoch": best_epoch,
+        "best_dev_macro_f1": best_dev_f1, "best_dev_weighted_f1": best_weighted_f1,
+        "best_epoch": best_epoch,
         "final_dev_macro_f1": history[-1]["val_macro_f1"],
         "wall_clock_seconds": wall_clock,
     }
     with open(os.path.join(results_dir, "metrics.json"), "w") as f:
         json.dump(metrics, f, indent=2)
-    print(f"  {run_id}: best_dev_macro_f1={best_dev_f1:.4f} @ epoch {best_epoch} ({wall_clock:.1f}s)",
-          flush=True)
+    print(f"  {run_id}: best_dev_macro_f1={best_dev_f1:.4f} best_dev_weighted_f1={best_weighted_f1:.4f} "
+          f"@ epoch {best_epoch} ({wall_clock:.1f}s)", flush=True)
     return metrics
 
 
@@ -171,9 +209,12 @@ def trivial_probe_emotion(n_sample=1500, t_frames=8, seed=42):
     X_dev, y_dev = embeddings[splits_arr == "dev"], labels_arr[splits_arr == "dev"]
     clf = LogisticRegression(max_iter=5000, random_state=seed)
     clf.fit(X_train, y_train)
-    dev_macro_f1 = f1_score(y_dev, clf.predict(X_dev), average="macro")
-    result = {"n_train": int(len(y_train)), "n_dev": int(len(y_dev)), "dev_macro_f1": float(dev_macro_f1)}
-    print(f"trivial-probe (emotion, dev): macro_f1={dev_macro_f1:.4f} "
+    preds = clf.predict(X_dev)
+    dev_macro_f1 = f1_score(y_dev, preds, average="macro")
+    dev_weighted_f1 = f1_score(y_dev, preds, average="weighted")
+    result = {"n_train": int(len(y_train)), "n_dev": int(len(y_dev)),
+              "dev_macro_f1": float(dev_macro_f1), "dev_weighted_f1": float(dev_weighted_f1)}
+    print(f"trivial-probe (emotion, dev): macro_f1={dev_macro_f1:.4f} weighted_f1={dev_weighted_f1:.4f} "
           f"(n_train={result['n_train']}, n_dev={result['n_dev']})", flush=True)
     return result
 
