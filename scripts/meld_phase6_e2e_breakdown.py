@@ -38,11 +38,11 @@ def main():
         model_ms = e["gpu_end_to_end_latency_ms"]
         rows.append({
             "condition": cond, "e": g["e"], "s": g["s"],
-            "backbone_gflops": round(g["backbone_gflops"], 1),
-            "attention_gflops": round(g["attention_gflops"], 4),
+            "encoder_gflops": round(g["encoder_gflops"], 1),
+            "fusion_attention_gflops": round(g["fusion_attention_gflops"], 4),
             "head_gflops": round(g["head_gflops"], 4),
-            "attention_pct_of_total": round(g["attention_pct_of_grand_total"], 4),
-            "attention_pct_of_model_only": round(g["attention_pct_of_model_only"], 2),
+            "fusion_attention_pct_of_total": round(g["fusion_attention_pct_of_grand_total"], 4),
+            "fusion_attention_pct_of_fusion_stack": round(g["fusion_attention_pct_of_fusion_stack"], 2),
             "model_only_gpu_latency_ms": round(model_ms, 2),
             "detection_single_stream_ms": round(det_single, 1),
             "detection_60way_amortized_ms": round(det_amortized, 1),
@@ -67,14 +67,28 @@ def main():
         print(f"  {r['condition']}: model_only={r['model_only_gpu_latency_ms']:.1f}ms "
               f"e2e_single_stream={r['e2e_single_stream_ms']:.1f}ms "
               f"e2e_throughput={r['e2e_throughput_amortized_ms']:.1f}ms "
-              f"attn%={r['attention_pct_of_total']:.4f}%")
+              f"fusion_attn%={r['fusion_attention_pct_of_total']:.4f}%")
 
-    print(f"\nA1-vs-A0 cost ratio (model-only, GPU): {ratio_model_only:.4f}x "
+    print(f"\nA1-vs-A0 cost ratio (model-only, GPU, internally consistent): {ratio_model_only:.4f}x "
           f"(A1 is CHEAPER: {'yes' if ratio_model_only < 1 else 'no'})")
-    print(f"A1-vs-A0 cost ratio (end-to-end, single-stream, detection included): "
-          f"{ratio_single_stream:.1f}x (A1 is CHEAPER: {'yes' if ratio_single_stream < 1 else 'no'})")
-    print(f"A1-vs-A0 cost ratio (end-to-end, 60-way throughput amortized): "
-          f"{ratio_throughput:.2f}x (A1 is CHEAPER: {'yes' if ratio_throughput < 1 else 'no'})")
+    print("NOTE: the e2e_single_stream_ms / e2e_throughput_amortized_ms columns above mix a GPU-"
+          "measured model latency with a CPU-measured detection latency -- kept in the CSV for the "
+          "raw numbers, but NOT a valid same-hardware cost ratio. See "
+          "scripts/meld_phase6_regimes.py / outputs/meld_phase6_regimes.json for the three "
+          "internally-consistent regimes (GPU-only, CPU-only at matched thread counts, and an "
+          "explicitly-assumption-labeled realistic-deployment split) -- those are the ratios to cite.")
+
+    # --- encoder-reduction finding: reported as its own positive result ---
+    import csv as _csv
+    with open(os.path.join(REPO_ROOT, "results", "summary.csv")) as f:
+        macro_f1 = {r["condition"]: float(r["macro_f1_mean"]) for r in _csv.DictReader(f)}
+    encoder_reduction = a0["encoder_gflops"] / a1["encoder_gflops"]
+    macro_f1_gain = macro_f1["A1"] - macro_f1["A0"]
+    print(f"\n=== encoder-reduction finding (positive result) ===")
+    print(f"Entity cropping cuts per-crop-encoder cost {encoder_reduction:.2f}x "
+          f"({a0['encoder_gflops']:.1f} -> {a1['encoder_gflops']:.1f} GFLOPs/clip) "
+          f"AND improves test macro-F1 by {macro_f1_gain:+.4f} "
+          f"({macro_f1['A0']:.4f} -> {macro_f1['A1']:.4f}), A0 -> A1.")
 
     # --- E=1 "largest face" estimate (clearly labeled, not measured) ---
     detect_only_ms = DT["decode_vs_detect_split"]["scrfd_detect_ms_mean"]
@@ -105,6 +119,9 @@ def main():
         "e1_s2_e2e_with_estimated_largest-face_detector_ms": round(e1s2_e2e_estimated_detector, 1),
     }
     print("\n=== E=1 'largest face' detection cost ESTIMATE (not measured) ===")
+    print("NOTE: e1_s2_e2e_*_ms figures below also mix GPU model latency with CPU-measured "
+          "detection latency, same caveat as above -- treat as an order-of-magnitude estimate, "
+          "not a regime-consistent number.")
     print(json.dumps(estimate, indent=2))
 
     out = {"rows": rows, "a1_vs_a0_ratio_model_only": ratio_model_only,
