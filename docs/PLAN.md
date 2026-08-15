@@ -156,13 +156,26 @@ computing a new number:
     accuracy / 41.8% weighted-F1 on MELD emotion (Table II), using 512-d face embeddings from a
     commercial face-recognition engine fine-tuned on CK+/RAF-DB — not raw video, not DINOv2-derived,
     and a 7-class rather than 3-class task.
-  - Other located ablations (various papers, all 7-class emotion, weighted-F1): ~40.3%, visual
-    textualization 25.2%, ELR-GNN 60.1% accuracy / 61.4% F1 (highest found, but that paper's visual
-    pipeline and exact protocol were not independently verified here).
+  - Iyer et al. (title/arXiv id not independently re-confirmed at verification time — located via
+    search, cross-checked once via direct fetch), *"Textualized and Feature-based Models for
+    Compound Multimodal Emotion Recognition in the Wild"* (arXiv:2407.12927), Table 3: visual-only
+    weighted-F1 **37.88%** (feature-based: ResNet50 pretrained on MS-Celeb-1M, fine-tuned on FER+,
+    + temporal convolutional network), and a weaker **25.18%** for a textualized/AU-description
+    variant of the same visual signal — confirms the earlier "visual textualization 25.2%" figure
+    and adds the stronger feature-based number it was previously missing.
+  - *"Efficient Long-distance Latent Relation-aware Graph Neural Network for Multi-modal Emotion
+    Recognition in Conversations"* (arXiv:2407.00119), their own model "ELR-GNN", Table 4: video-only
+    **60.1% accuracy / 61.4% F1** (metric type — macro vs. weighted — not confirmed at verification
+    time; visual features are 3D-CNN-derived, not otherwise detailed in the ablation table). Treated
+    as an unverified upper outlier, not the comparison band.
 - **Conclusion: A6 for MELD is reported as "not available in the published literature for the
   3-class sentiment task"** rather than substituting a task-mismatched emotion number under the A6
   label. This mirrors the VideoMAE linear-probe gap above (row 130): report the absence plainly,
   do not fabricate or silently repurpose an adjacent-task number to fill the slot.
+- **These emotion-task numbers are reused, not wasted**: `docs/DECISION_RULES.md`'s 2026-08-15
+  "secondary calibration endpoint" amendment runs A0/A1/A2 + trivial probe on 7-class emotion
+  (dev only, locked recipe, no new search) specifically to compare against this same-task published
+  range, since no same-task range exists for A6's actual 3-class sentiment slot.
 
 ---
 

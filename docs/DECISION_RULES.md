@@ -223,3 +223,32 @@ tokenization/training pipeline works as intended, not as a new hypothesis test. 
 below the published range, that is treated as a pipeline problem to diagnose **before** the Phase 4
 test run, not folded into the results as if it were informative about H1/H2 — this endpoint exists
 precisely to catch that failure mode before the one-shot test evaluation, not to explain it after.
+
+### 2026-08-15 — Calibration numbers computed (immediate, same-session follow-up to the above)
+
+`scripts/meld_emotion_calibration.py`, dev split, locked recipe per condition, best-epoch
+checkpoint (macro-F1-selected, weighted-F1 computed at that same checkpoint — reload verified to
+reproduce the selecting macro-F1 exactly).
+
+| | macro-F1 | weighted-F1 |
+|---|---:|---:|
+| A0 (r08) | 0.1732 | 0.2990 |
+| A1 (r07, primary) | 0.1958 | 0.3235 |
+| A2 (r03, shuffled) | 0.1719 | 0.3372 |
+| trivial-feature probe (n_dev=149) | 0.1748 | 0.2890 |
+| majority-class baseline (full dev, n=1108) | 0.0850 | 0.2518 |
+| stratified-random closed-form (K=7) | 0.1429 | — |
+
+Published video-only MELD 7-class-emotion weighted-F1 located (see `docs/PLAN.md` §5 for full
+citations): 25.18% (weak/textualized-visual method), 37.88% (feature-based, ResNet50+TCN), 41.8%
+(face-embedding, CK+/RAF-DB-tuned), 61.4% (3D-CNN features, metric type not independently
+confirmed — treated as an unverified upper outlier, not the comparison band).
+
+**Verdict: calibrated, not alarming, though below the closest-matched published cluster.** A1
+(0.3235 WF1) clears every internal sanity floor by a comfortable margin — majority-class (0.2518),
+stratified-random macro-F1 (0.1429), and this project's own trivial-feature probe (0.2890) — the
+signature this endpoint exists to catch (a broken pipeline scoring at or below chance) is absent.
+It sits modestly below the more-comparable published feature-based cluster (37.9–41.8%), which is
+expected rather than concerning: the recipe used here is the one **locked for 3-class sentiment**,
+reused unchanged per this amendment's "no new search" scope, on a harder, more class-imbalanced
+7-class task it was never tuned for. **Not** treated as grounds to halt or revisit Phase 4 prep.
