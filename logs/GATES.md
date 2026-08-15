@@ -338,6 +338,32 @@
   (item- vs seed-paired CIs, seed 31337 marked).
 - **Result:** PASS. Track 1 complete in full.
 
+## Track 2 — DAiSEE H2 replication: pre-registration + effect floor
+
+- **Date:** 2026-08-15T16:44:32Z
+- **Hard gate: complete by 2026-08-24 or dropped.**
+- **Commits:** `00dcc1d` (fresh pre-registration, `docs/DECISION_RULES_DAISEE.md`,
+  committed before any run — H2 only, A1 vs A0; H1/A2 explicitly not tested
+  since `E=1` means no second entity slot to shuffle), `1b24552`
+  (`DAiSEEDataset` + effect-floor bootstrap script, committed before running),
+  `7c2c0d0` (computed floor, separate non-editing append).
+- **`EFFECT_FLOOR = 0.03`** (`max(0.02, 2×pooled_SE)`, `pooled_SE=0.0138`,
+  blind bootstrap, A0/A1 only, 3 seeds + 500-resample item bootstrap on val).
+  Same underpowered-for-0.02 finding as MELD's own floor (0.04).
+- **Pre-existing infrastructure reused, not rebuilt**: DAiSEE tokenization +
+  feature cache (`cache/{tracks,features,features_grid}/daisee/`) already
+  complete and gated from earlier work (8571/8571 clips) — this gate only
+  added the training-side dataset class, which didn't exist yet.
+- **Flagged in advance**: DAiSEE's Engagement label distribution is heavily
+  skewed (test: {0:4, 1:84, 2:882, 3:814}) — class 0 has 4 test clips,
+  giving it outsized leverage on macro-F1. Stated in the pre-registration
+  before any run, not discovered after.
+- **Result:** PASS at this gate. **Not started**: Phase 3 equivalent (fresh
+  8-point dev grid search, `docs/SEARCH_GRID_DAISEE.md`/
+  `docs/LOCKED_RECIPE_DAISEE.md`) and Phase 4 equivalent (5-seed test
+  evaluation) — separate, later gates, per "Track 2 at its own gates,"
+  not chained into this one.
+
 ## Phase 4 — MELD test evaluation (the one-shot test touch)
 
 - **Date:** 2026-08-15T15:03:40Z
