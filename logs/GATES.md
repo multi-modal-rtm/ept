@@ -315,6 +315,29 @@
 - **Result:** PASS. No blocker for Phase 4 found; one action item recorded
   (MELD training entry point still needs building before Phase 4, see above).
 
+## Track 1 — Phase 6: efficiency + figures
+
+- **Date:** 2026-08-15T16:33:10Z
+- **Commits:** `dfec96a` (efficiency measurement: GFLOPs, latency, memory,
+  detection cost — `results/efficiency.csv`, `results/efficiency_budget_sweep.csv`),
+  `3f58bdf` (4 vector-PDF figures, `paper/figures/`).
+- **Key finding**: detection+clustering (6.28s/clip, single-clip single-thread)
+  is 2-3 orders of magnitude larger than the model's own end-to-end compute
+  (9.5–39ms GPU depending on condition) — reported as its own line item per
+  `docs/PLAN.md` §6's explicit warning, never folded into model GFLOPs/latency.
+  A0 (grid) pays zero detection cost but ~4.5x more backbone GFLOPs than the
+  entity conditions (crops every spatial region every frame unconditionally
+  vs. only actually-detected top-E entity frames).
+- **Tooling note**: `thop` substituted for the `ptflops`/`fvcore` PLAN.md
+  suggested — neither is installed, and installing them risked re-triggering
+  the opencv-headless/opencv-python conflict (`CLAUDE.md` hard-won fact).
+- **Figures**: architecture schematic (cross-checked against `ept_former.py`'s
+  actual `forward()`, not memory), OUC-CGE leakage (two visually distinct
+  cosine-sim-1.000000 cross-split pairs), accuracy-vs-GFLOPs Pareto (detection
+  cost explicitly excluded, labeled as such), per-seed margin divergence
+  (item- vs seed-paired CIs, seed 31337 marked).
+- **Result:** PASS. Track 1 complete in full.
+
 ## Phase 4 — MELD test evaluation (the one-shot test touch)
 
 - **Date:** 2026-08-15T15:03:40Z
