@@ -314,3 +314,59 @@
   more imbalanced task never searched for it), not evidence of a pipeline bug.
 - **Result:** PASS. No blocker for Phase 4 found; one action item recorded
   (MELD training entry point still needs building before Phase 4, see above).
+
+## Phase 4 — MELD test evaluation (the one-shot test touch)
+
+- **Date:** 2026-08-15T15:03:40Z
+- **Commits (code committed before any test run):** `8747720` (main matrix +
+  budget sweep scripts + `MELDTestDataset`/`MELDBudgetDataset`, verified via
+  unit tests + dev-split smoke tests + shape checks across all 10 (E,S)
+  points, all on train/dev only, before touching test), `3ee4b05` (paired
+  bootstrap, purity stratification, summary.csv generator — these scripts
+  read only already-written `predictions.json`/`metrics.json`, verified
+  against synthetic data with known answers in all three branch directions
+  before real predictions existed), `4de324b` (`results/summary.csv`).
+- **Runs:** A0–A5, mask-only × 5 seeds {42,1337,2024,7,31337} = 35 runs,
+  locked recipe (`docs/LOCKED_RECIPE_MELD.md`) unchanged, train-to-completion
+  then a single final-epoch test evaluation per (condition, seed) — no
+  per-epoch test touching, no test-based epoch selection. Plus the
+  trivial-feature probe (full train → full test, not a subsample). Plus the
+  token-budget sweep (E∈{1,2,4,6,8} × S∈{2,4}, A1, r07 unchanged, 5 seeds =
+  50 runs; S=2 derived from the cached S=4 features by documented segment
+  merging, not a fresh extraction). **90 total (condition,seed) test-eval
+  points, one test touch each.**
+- **Pre-launch checkpoint:** `--print-config-only` for A1/seed42 confirmed
+  `dataset=meld, e_max=6, s_max=4` before any run launched.
+- **H1 (A1−A2, persistence):** mean margin `0.0340`, 95% CI `[0.0203, 0.0480]`
+  (excludes zero), 10,000-resample item-paired bootstrap. **Below
+  `EFFECT_FLOOR=0.04`** — not supported.
+- **H2 (A1−A0, entity structure):** mean margin `0.0315`, 95% CI
+  `[0.0159, 0.0470]` (excludes zero). **Below `EFFECT_FLOOR=0.04`** — not
+  supported.
+- **Decision rule: no branch fired.** Neither H1 nor H2 clears the
+  pre-registered floor despite both margins being positive with
+  zero-excluding CIs — exactly the "underpowered for the 0.04 margin"
+  scenario the 2026-08-15 effect-floor amendment named in advance as a
+  possible outcome and pre-committed to reporting as underpowered, not as
+  evidence of absence. Applied exactly as frozen; not softened, not argued
+  with. Full numbers: `outputs/meld_phase4_statistics.json`.
+- **Purity-stratified secondary (does not alter the branch):** margins
+  low/mid/high purity tercile = `0.0377 / 0.0264 / 0.0389` (n=870 each), all
+  three CIs exclude zero, **pattern is not monotone** (dips at mid) — per the
+  pre-specification, a non-monotone pattern is evidence against "identity
+  recovery quality is the limiting factor," sharpening rather than resolving
+  the pooled underpowered result. `outputs/meld_phase4_purity_stratified.json`.
+- **Budget sweep:** `outputs/meld_phase4_budget_sweep_summary.json`. E=6,S=4
+  point (`0.4040±0.0077`) matches A1's main-matrix result exactly — internal
+  consistency check passes (same recipe/geometry computed two independent
+  ways).
+- **Anomaly, reported not excluded:** A2 seed=31337 collapsed to
+  near-majority-class prediction (macro-F1 `0.2166`, zero F1 on
+  negative/positive) — a genuine training-instability outlier, included as-is
+  in all means/std/bootstrap per `CLAUDE.md` non-negotiable #6 (no
+  cherry-picking across seeds).
+- **Result:** Test split touched exactly once per (condition, seed, E, S)
+  point; no test-based model/epoch selection anywhere in this phase.
+  `results/summary.csv` written. **Decision rule outcome: no branch fires —
+  study underpowered for H1/H2 at `EFFECT_FLOOR=0.04`, both margins positive
+  and significant but below the pre-registered bar.**
