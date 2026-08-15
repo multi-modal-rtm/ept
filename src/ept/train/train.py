@@ -22,18 +22,23 @@ REPO_ROOT = "/home/devops/ept"
 
 
 def build_model(condition, dropout, e_max=8, s=8):
-    """e_max/s only matter for mask_only (its input layer is E*S-shaped, since it
-    consumes the flattened presence mask directly, not pooled/attended features).
-    Every other condition's parameter count depends only on the shared D=1536
-    feature dim, not on E/S, so the defaults (OUC-CGE's 8x8) are inert for them."""
+    """e_max/s must match the dataset's actual geometry (OUC-CGE: 8x8, MELD:
+    6x4). mask_only's input layer is E*S-shaped and needs the exact value.
+    EPTFormer's segment-position table is only ever sliced to the first `s`
+    rows (verified: a sinusoidal, non-learned buffer -- values depend on
+    position index alone, not on the table's allocated size, so passing a
+    larger-than-needed s_max here is provably harmless) but is still passed
+    explicitly rather than left on its own 8-default, so a future geometry
+    with S > 8 fails loudly here instead of silently relying on headroom that
+    happens to still be big enough."""
     if condition == "A0":
-        return EPTFormer(dropout=dropout, use_temporal=True, use_social=True)
+        return EPTFormer(dropout=dropout, use_temporal=True, use_social=True, s_max=s)
     if condition in ("A1", "A2"):
-        return EPTFormer(dropout=dropout, use_temporal=True, use_social=True)
+        return EPTFormer(dropout=dropout, use_temporal=True, use_social=True, s_max=s)
     if condition == "A3":
-        return EPTFormer(dropout=dropout, use_temporal=True, use_social=False)
+        return EPTFormer(dropout=dropout, use_temporal=True, use_social=False, s_max=s)
     if condition == "A4":
-        return EPTFormer(dropout=dropout, use_temporal=False, use_social=True)
+        return EPTFormer(dropout=dropout, use_temporal=False, use_social=True, s_max=s)
     if condition == "A5":
         return MeanPoolMLP(dropout=dropout)
     if condition == "mask_only":

@@ -192,3 +192,34 @@ added, would lower the seed-level variance component using information gathered 
 blind bootstrap — exactly what the blind procedure (record dispersion only, never inspect ranking,
 freeze before running) existed to prevent. The added seeds increase the precision of future reported
 means; they cannot retroactively lower the bar a result has to clear.
+
+### 2026-08-15 — 7-class MELD emotion added as a secondary calibration endpoint
+
+**Secondary calibration endpoint, fixed before any run.** `docs/PLAN.md`'s A6 search
+(`5423b5f`) found no citable published video-only baseline for MELD's 3-class sentiment task —
+MELD's own paper excludes video baselines entirely, and every located downstream video-only
+ablation is for the 7-class emotion task instead. Rather than leave A6 with nothing to compare
+against, 7-class emotion is added as a **secondary, calibration-only** endpoint: its sole purpose
+is checking this pipeline's numbers land in a sane range next to published video-only MELD emotion
+baselines, since a same-task published reference is available there and is not for sentiment.
+
+**Explicitly not part of the branch decision (§ Decision rule) and does not touch H1/H2.** No new
+recipe search — reuses the already-locked recipe per condition from `docs/LOCKED_RECIPE_MELD.md`
+(A0: r08, A1: r07, A2: r03) unchanged, since this endpoint asks "is the pipeline sane," not "what's
+the best recipe for emotion." Scope: **A0, A1, A2 + the trivial-feature probe, dev split only, no
+test evaluation** — sufficient to compare against a literature range; the full A0–A5 + mask-only
+matrix is not needed for a calibration check.
+
+**Labels**: MELD's standard 7-class taxonomy (anger, disgust, fear, joy, neutral, sadness,
+surprise), read directly from the same raw label CSVs already used for tokenization
+(`src/ept/train/emotion_labels.py`), joined against the existing cache by clip_id — no new
+tokenization or feature-extraction pass, since emotion is a label swap over the same cached
+features, not a different input.
+
+**Verdict criterion, stated in advance**: if our dev macro-F1 (or weighted-F1, whichever the
+cited literature reports, both will be computed and labeled) lands within or above the published
+video-only range, the pipeline is calibrated and this is reported as supporting evidence that the
+tokenization/training pipeline works as intended, not as a new hypothesis test. If it lands **far**
+below the published range, that is treated as a pipeline problem to diagnose **before** the Phase 4
+test run, not folded into the results as if it were informative about H1/H2 — this endpoint exists
+precisely to catch that failure mode before the one-shot test evaluation, not to explain it after.
