@@ -1,0 +1,131 @@
+%% paper/sections/dataset_audit.tex
+%% Draft only. Every number below is traced to a REPORT.md or a committed
+%% JSON results file via an inline LaTeX comment; none is from memory.
+%% Framing: a property of the provided split, not a criticism of the dataset's
+%% authors or collection methodology (see \S\ref{sec:related-work} for why this
+%% is presented as independent confirmation of a known failure class, not a
+%% novelty claim).
+\label{sec:dataset-audit}
+
+Before any dataset in this paper is used to test a hypothesis, it is passed
+through a fixed, two-part admission procedure: (i) a cross-split
+near-duplicate audit on frozen, pre-trained clip embeddings, and (ii) a
+trivial-feature probe --- a linear classifier on a single mean-pooled
+embedding, with no temporal, entity, or attention structure --- evaluated
+against a subject-disjoint reference score. Neither part touches the model
+architecture under study or any label beyond what a linear probe needs to
+fit. We describe the procedure through its first, failing application.
+
+\subsection{Case study: OUC-CGE}
+OUC-CGE~\cite{lu2025ouccge} is a 2025 release of classroom group-engagement
+video, 7700 clips at three engagement levels
+%% outputs/dataset_admission/ouccge/admission_report.json: label_counts {0:3024, 1:2041, 2:2635}, n_clips 7700
+(low $3024$ / mid $2041$ / high $2635$), split
+%% outputs/dataset_admission/ouccge/admission_report.json: split_counts
+train $6160$ / val $769$ / test $771$ by, per its release documentation, a
+random assignment of generated clip filenames to an 80/10/10 partition. The
+release does not describe the partition as session- or recording-disjoint.
+
+\paragraph{Near-duplicate audit.}
+For each clip we take the masked mean of a frozen backbone's per-position
+embeddings over the cached feature tensor, L2-normalize it, and record its
+cosine similarity to its nearest neighbor in the comparison split.
+Table~\ref{tab:ouccge-dup} summarizes all three cross-split comparisons.
+
+\begin{table}[t]
+\caption{OUC-CGE cross-split nearest-neighbor cosine similarity.
+%% outputs/phase3_5_audit/REPORT.md sec.1 (near_duplicate_report.json)
+}
+\label{tab:ouccge-dup}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Comparison & $n$ & mean & median & $\%\!\geq\!0.95$ \\
+\midrule
+val $\to$ train  & 769 & 0.974 & 0.989 & 98.57\% \\
+test $\to$ train & 771 & 0.981 & 0.990 & 99.09\% \\
+val $\to$ test   & 769 & 0.960 & 0.975 & 91.16\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+All three comparisons are elevated roughly equally --- not a train/test-only
+artifact. Manual inspection of the highest-similarity cross-split pairs
+%% outputs/phase3_5_audit/REPORT.md sec.2
+(cosine similarity $\geq 0.9999996$, identical labels, same room/table/
+students/objects/pose) shows these are adjacent temporal segments of one
+continuous recording, independently assigned across splits. Sequential clip
+identifiers are not blocked by split: adjacent-numbered clips land in
+different splits
+%% outputs/phase3_5_audit/REPORT.md sec.3 (33.1-35.1% across the three classes)
+33.1--35.1\% of the time, consistent with partitioning at the individual-clip
+level from continuous recordings rather than at the session level. A
+connected-components sweep over the full corpus finds a single component
+containing
+%% outputs/phase3_5_audit/TRACK1_TRACK2_REPORT.md sec.1 ("at every threshold from 0.80 to 0.90 ... 98.5% ... 7587/7700")
+98.5\% of all 7700 clips (7587) at every similarity threshold from 0.80 to
+0.90, with no natural break in component count until $\sim$0.92 --- the
+similarity manifold is a continuum, not discrete session clusters.
+
+\paragraph{Trivial-feature probe.}
+A logistic regression on the mean-pooled embedding alone --- no time axis,
+no entities, no attention --- trained on train and evaluated on the provided
+validation split reaches
+%% outputs/dataset_admission/ouccge/admission_report.json: trivial_probe.val_macro_f1 (= outputs/phase3_5_audit/REPORT.md sec.4)
+macro-F1 $0.9748$. The identical probe, identical code path, on DAiSEE's
+subject-disjoint split~\cite{gupta2016daisee} reaches
+%% outputs/dataset_admission/daisee/admission_report.json: trivial_probe.val_macro_f1
+$0.2177$. Same method, same amount of architecture (none); the eighty-point
+gap localizes the anomaly to OUC-CGE's split, not to the probe, the backbone,
+or any part of this project's own pipeline
+%% outputs/phase3_5_audit/REPORT.md sec.5
+.
+
+\paragraph{Is it fixable by re-splitting?}
+We tested whether grouping clips into connected components and re-splitting
+by group (rather than by clip) at the 0.98 similarity threshold recovers a
+usable split. This threshold groups
+%% outputs/phase3_5_audit/TRACK1_TRACK2_REPORT.md sec.1 (threshold_0.98: n_components 1560)
+the corpus into 1560 components, 85.8\% of them class-pure
+%% outputs/phase3_5_audit/TRACK1_TRACK2_REPORT.md sec.2
+, and a stratified group-disjoint re-split
+%% outputs/phase3_5_audit/resplit_viability_report.json: resplit_n_train=6160, resplit_n_val=771
+(train 6160 / val 771 / test 769) drops the trivial probe to
+%% outputs/phase3_5_audit/resplit_viability_report.json: resplit_trivial_probe_val_macro_f1
+macro-F1 $0.7305$ --- a real drop from $0.9748$, but far short of the
+$0.2177$ reference. Computing nearest-neighbor similarity \emph{after} this
+re-split shows why:
+%% outputs/phase3_5_audit/resplit_viability_report.json: resplit_residual_val_to_train_similarity.pct_ge_0.90
+95.2\% of the new validation clips still have a training-set neighbor at
+cosine similarity $\geq 0.90$. The 0.98 grouping threshold removes literal
+near-duplicate segments but leaves the corpus's broader similarity structure
+--- different recording sessions reusing the same room, camera position, and
+lighting --- intact; there is no threshold at which ``same session'' cleanly
+separates from ``different session, same physical setup.'' We conclude a
+group-disjoint re-split of the released clips is not a viable fix.
+
+\paragraph{Framing.}
+We stress that this is a property of the \emph{provided split}, not of the
+underlying recordings or a criticism of the dataset's collection: OUC-CGE is
+documented as fixed-camera classroom video, and nothing in its release
+claims session-disjoint partitioning. The released split performs exactly
+the random clip-level assignment its documentation describes; the assignment
+simply does not, and by its description was not intended to, keep physical
+recording sessions inside one split each. As \S\ref{sec:related-work}
+discusses, this is an instance of a documented failure class in
+clip-derived video benchmarks, not a novel one, newly located here in a
+specific, recent release via a check we now run on every dataset before
+using it.
+
+\subsection{The admission procedure, applied elsewhere}
+The same two-part check --- near-duplicate audit plus trivial-probe-vs-
+reference --- is not bespoke to OUC-CGE. Run unchanged on MELD
+%% outputs/dataset_admission/meld/admission_report.json: trivial_probe.val_macro_f1, n_train=1092, n_val=120 (stratified admission sample, n=1498)
+(dialogue-level multi-party video~\cite{poria2019meld}), a stratified
+1498-clip admission sample scores trivial-probe macro-F1 $0.4155$ with
+cross-split near-duplicate rates at $0.95$ similarity of
+%% outputs/dataset_admission/meld/admission_report.json: near_duplicate_audit.{val_to_train,test_to_train,val_to_test}.pct_ge_0.95
+0.0\%, 0.35\%, and 0.0\% --- no giant-component signature. DAiSEE's
+$0.2177$ (above) anchors the low end as the subject-disjoint reference.
+The procedure is not a leakage detector for one dataset; it is a gate every
+dataset in this paper is required to clear before its numbers are trusted,
+reported here as a checkable artifact rather than an informal sanity check.

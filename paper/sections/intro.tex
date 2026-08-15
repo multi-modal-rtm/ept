@@ -1,0 +1,68 @@
+%% paper/sections/intro.tex
+%% Draft only. No results, no methods, no conclusions -- see
+%% docs/DECISION_RULES.md and logs/GATES.md for why those wait.
+
+A text token has a referent that survives its position: the word ``teacher''
+at sequence index 3 and the same word at index 40 name the same lexical
+item, and a language transformer's attention over those two positions is
+answering a well-posed question --- \emph{how related are these two
+mentions of the same thing?} A patch token in a video transformer has no
+such guarantee. A grid cell at spatial location $(i,j)$ in frame $t$ and the
+same cell in frame $t{+}1$ denote the same thing only if nothing has moved
+through that cell, an assumption video violates constantly and by design ---
+people walk, cameras pan, occlusion happens. Divided space-time and
+factorised attention over a fixed patch grid nonetheless price every pairwise
+affinity between these positions as if the grid supplied a stable identity
+axis. It does not. The tokens are referent-free.
+
+This paper asks a narrow, checkable question that follows from that
+observation: does giving a video transformer tokens with a genuine
+persistent referent --- one token per tracked entity per time segment,
+rather than one token per spatial cell --- change what the model can learn,
+and is the effect attributable to \emph{persistence itself} rather than to
+two things that usually travel with it, entity-localized cropping (looking
+only at where an entity is, instead of the whole frame) and a smaller,
+matched token budget? Prior entity- and object-centric video representations
+motivate the persistence hypothesis but rarely isolate it from these
+confounds (\S\ref{sec:related-work}); we design a control that shuffles
+entity identity across time segments while holding architecture, token
+count, and every other factor fixed, so that any gap between the shuffled
+and unshuffled conditions is attributable to persistence and only to
+persistence (\S\ref{sec:method}).
+
+Answering that question honestly turned out to require answering a
+prior one first: is the benchmark we asked it on actually testing what it
+claims to test? Our first candidate primary dataset, OUC-CGE, a recent
+classroom group-engagement corpus~\cite{lu2025ouccge}, failed that check. A
+linear probe on a single mean-pooled frame embedding --- no temporal
+structure, no entities, no attention, nothing an architecture paper would
+want credit for --- reaches
+%% outputs/phase3_5_audit/REPORT.md sec.4
+macro-F1 $0.9748$ on its provided validation split, statistically
+indistinguishable from a full entity-persistent transformer trained on the
+same split (
+%% outputs/phase3_5_audit/REPORT.md sec.4, citing the locked-recipe A1 result
+$0.9767$). The same probe, unchanged, scores
+%% outputs/dataset_admission/daisee/admission_report.json: trivial_probe.val_macro_f1
+$0.2177$ on DAiSEE~\cite{gupta2016daisee}, a dataset built with a
+subject-disjoint split. The gap is not a property of the probe; it is a
+property of the split. \S\ref{sec:dataset-audit} diagnoses why, reframes the
+finding as a property of how OUC-CGE's release was partitioned rather than a
+criticism of its collection or its authors, and turns the diagnosis into a
+reusable admission procedure that any candidate dataset can be checked
+against before it is trusted with a hypothesis test. We apply that procedure
+to our eventual primary dataset before using it, not after being burned by
+it.
+
+The contributions of this paper are therefore: (1) Entity-Persistent
+Tokenization (EPT) and an identity-shuffle control that isolates persistence
+from its usual confounds, evaluated under a decision rule and effect-size
+floor pre-registered before any test-set evaluation
+(\S\ref{sec:pre-registration}); (2) a diagnosed, quantified account of
+train/test leakage in a released classroom-engagement benchmark, reframed
+in \S\ref{sec:dataset-audit} as independent confirmation of a known failure
+mode in clip-derived video benchmarks rather than a claim of discovering the
+phenomenon itself; and (3) a lightweight, reusable dataset-admission test ---
+cross-split near-duplicate detection plus a trivial-feature-probe floor
+against a subject-disjoint reference --- that we run on every dataset in
+this paper, not only the one that failed it.

@@ -1,0 +1,85 @@
+%% paper/sections/related_work.tex
+%% Draft only. Literature search for prior leakage reports (OUC-CGE specifically,
+%% and clip-derived affect/engagement benchmarks generally) was run BEFORE this
+%% file was drafted, per instruction. Summary: no prior report of OUC-CGE leakage
+%% was found; a directly analogous, previously-reported case (ChaLearn First
+%% Impressions) and a contemporaneous general leakage-detection methodology were
+%% found and are cited below, so \S\ref{sec:dataset-audit} is framed as
+%% independent confirmation of a known failure class plus a reusable test, not a
+%% novelty claim.
+\label{sec:related-work}
+
+\paragraph{Efficient video attention.}
+Reducing the cost of full space-time self-attention over a patch grid has
+been approached by factorising it (divided space-time
+attention~\cite{bertasius2021timesformer}, tubelet and factorised encoders
+in ViViT~\cite{arnab2021vivit}), by restricting its span (windowed and
+pooling attention in Multiscale Vision
+Transformers~\cite{fan2021multiscale}), by merging redundant tokens
+post hoc~\cite{bolya2023tome}, and by replacing attention's quadratic cost
+with a state-space recurrence~\cite{gu2023mamba}. These methods are
+orthogonal to the question this paper asks: they make attention over the
+same referent-free grid cheaper or shorter-range, but the tokens being
+attended over still lack a persistent identity across time. EPT does not
+propose a cheaper approximation of grid attention --- it proposes a
+different definition of what a token denotes, orthogonal to (and in
+principle combinable with) any of the above.
+
+\paragraph{Object- and entity-centric video representation.}
+Slot Attention~\cite{locatello2020slot} and its video extension
+SAVi~\cite{kipf2022savi} learn object-centric representations end-to-end,
+discovering slots without external detection or tracking supervision; they
+motivate the persistence hypothesis this paper tests but do not isolate
+persistence from token count or spatial localization as separate causal
+factors, and typically target scene decomposition or dynamics prediction
+rather than a downstream classification task with a matched-budget grid
+baseline. EPT takes the more constrained, less general path deliberately:
+identity comes from a detector and tracker rather than being discovered, in
+exchange for a token stream where identity persistence is a manipulable,
+independently-controllable variable (\S\ref{sec:method}) rather than an
+emergent property that is hard to ablate.
+
+\paragraph{Engagement and group affect recognition.}
+Video-based engagement recognition has largely developed on datasets built
+around a single subject and a subject-disjoint split --- DAiSEE, 9068 ten
+second e-learning clips from 112 subjects, four ordinal engagement
+levels~\cite{gupta2016daisee}; EngageNet's official split is likewise
+subject-independent. Multi-party affect work (e.g.\ MELD, dialogue-level
+sentiment and emotion over multi-speaker television
+video~\cite{poria2019meld}) instead splits by dialogue or scene. OUC-CGE
+extends the task to \emph{group} engagement in real classrooms, released
+under a split described as 80/10/10 by randomly generated clip
+filename~\cite{lu2025ouccge}. Neither the release nor, to our search, any
+subsequent use of it discusses whether that random clip-level assignment
+keeps physical recording sessions disjoint across splits;
+\S\ref{sec:dataset-audit} finds that it does not.
+
+\paragraph{Split leakage in clip-derived video benchmarks.}
+This is not the first video benchmark found to leak across splits at the
+clip level. In the ChaLearn First Impressions apparent-personality corpus
+--- 15-second clips cut from a smaller pool of longer YouTube videos ---
+overlapping data splits are identified as a confound in the
+personality-attribution literature, with the same source video contributing
+clips to more than one split~\cite{ras2019background}. The
+general problem of detecting such leakage in visual datasets via embedding
+similarity and cluster/connected-component analysis is addressed directly,
+contemporaneously with this project's own audit, by
+Ramos~et~al.~\cite{ramos2025leakage}, using a similar toolkit (embedding
+nearest-neighbor similarity, connected components across splits) to the one
+independently developed in \S\ref{sec:dataset-audit}. We did not find a
+prior report specific to OUC-CGE --- it is a recent release
+(April 2025~\cite{lu2025ouccge}) with, to our search, no published critique
+or errata. We therefore present \S\ref{sec:dataset-audit}'s finding as an
+instance of an already-documented failure class in clip-derived video
+benchmarks, newly identified for this specific dataset, rather than as a
+novel phenomenon; the contribution is the finding for OUC-CGE plus a
+reusable, dataset-agnostic admission procedure, not the general observation
+that clip-level splitting can leak.
+
+\paragraph{Edge video analytics.}
+Deploying video models under CPU/edge power and latency budgets typically
+trades accuracy for cheaper backbones or lower frame rates. This paper
+reports cost as an end-to-end pipeline number, detection included, rather
+than as attention FLOPs alone, following the general caution in edge
+deployment work that a component-level efficiency gain does not imply a
+system-level one (\S\ref{sec:results}).
