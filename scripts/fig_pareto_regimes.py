@@ -18,8 +18,8 @@ OUT_PATH = os.path.join(REPO_ROOT, "paper", "figures", "fig3_pareto_gflops.pdf")
 TRIVIAL_PROBE_MACRO_F1 = 0.3648
 CONDITIONS = ["A0", "A1", "A2", "A3", "A4", "A5", "mask_only"]
 LABEL_OFFSET = {
-    "A0": (4, -2), "A1": (5, 4), "A2": (5, -8), "A3": (-15, 6),
-    "A4": (5, 4), "A5": (-15, -8), "mask_only": (5, 0),
+    "A0": (6, -12), "A1": (6, -1), "A2": (6, -18), "A3": (6, -8),
+    "A4": (6, 4), "A5": (6, -10), "mask_only": (5, 0),
 }
 
 
@@ -35,10 +35,10 @@ def load_json(name):
 
 def panel(ax, title, cond_latency_ms, summary, trivial_latency_ms=None, e1s2=None, unavailable_reason=None):
     if unavailable_reason:
-        ax.text(0.5, 0.5, "not available:\n" + unavailable_reason, ha="center", va="center",
-                fontsize=4.6, wrap=True, transform=ax.transAxes, color="#8c1f1f")
         ax.set_xticks([])
         ax.set_yticks([])
+        for spine in ax.spines.values():
+            spine.set_color("#aaaaaa")
         ax.set_title(title, fontsize=6.2)
         return
 
@@ -65,7 +65,7 @@ def panel(ax, title, cond_latency_ms, summary, trivial_latency_ms=None, e1s2=Non
         ex, ey = e1s2
         ax.scatter([ex], [ey], marker="D", s=24, facecolors="#d62728", edgecolors="#d62728", zorder=6)
         ax.annotate("E=1,S=2", (ex, ey), fontsize=4.0, color="#d62728",
-                    xytext=(3, -8), textcoords="offset points")
+                    xytext=(3, -30), textcoords="offset points")
 
     ax.set_xscale("log")
     ax.xaxis.set_major_locator(mticker.LogLocator(base=10, numticks=4))
@@ -105,7 +105,7 @@ def main():
         panel(axes[0, 0], f"A: GPU-only (det. {det_ms:.1f}ms)", cond_lat, summary,
               trivial_latency_ms=trivial_lat, e1s2=(e1s2_lat, e1s2_acc))
     else:
-        panel(axes[0, 0], "A: GPU-only", {}, summary, unavailable_reason=a_reg.get("reason", "not attempted"))
+        panel(axes[0, 0], "A: GPU-only: not measured", {}, summary, unavailable_reason=a_reg.get("reason", "not attempted"))
 
     # Panel B1: CPU-only, threads=1
     b1 = regimes.get("B_cpu_only_threads1")

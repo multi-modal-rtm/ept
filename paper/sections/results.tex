@@ -143,8 +143,14 @@ alone, does not predict sentiment on MELD.
   \centering
   \includegraphics[width=\linewidth]{figures/fig3_pareto_gflops.pdf}
   \caption{Accuracy vs.\ latency by hardware regime (MELD). No panel mixes
-    GPU- and CPU-measured numbers; Regime A (GPU-only) is unavailable, not
-    estimated (\S\ref{sec:efficiency}).}
+    GPU- and CPU-measured numbers. Regime A (GPU-only) is not measured:
+%% outputs/meld_phase6_gpu_detection_attempt.json: root_cause
+    \texttt{onnxruntime-gpu} 1.28.0's prebuilt wheel requires CUDA 13's
+    \texttt{libcublasLt.so.13}, but this environment provides only CUDA
+    12.8 runtime libraries (matching the CUDA-12.8-pinned PyTorch build used
+    throughout, itself pinned for Blackwell/sm\_120 support); the two are
+    mutually incompatible here, so no GPU-only detection latency exists to
+    plot (\S\ref{sec:efficiency}).}
   \label{fig:pareto}
 \end{figure}
 \textbf{Cost lives in encoding, not fusion.} EPT-Former's own attention
