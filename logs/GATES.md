@@ -444,3 +444,28 @@
 - **Result:** PASS. Zero test evaluations. **Not started**: Phase 4
   equivalent (5-seed test evaluation) — separate, later gate, per "Track 2 at
   its own gates," not chained into this one. Deadline: 2026-08-24.
+
+## Track 2 — DAiSEE H2 replication: Phase 4 (the one-shot test touch)
+
+- **Date:** 2026-08-16T09:10:03Z
+- **Commits:** `347115b` (amendment restricting the primary metric to
+  macro-F1 over classes 1-3, committed before Phase 4 ran — see that commit
+  for the full rationale), `7d2b6e8` (test-eval code, committed before
+  running), `2f34c00` (statistics script, verified against synthetic data
+  before real predictions existed), `69b22b3` (`results/summary_daisee.csv`).
+- **10 runs (A0, A1 × 5 seeds), one test touch each** — train to the locked
+  recipe's full epoch count, single final-epoch test evaluation, no
+  test-based selection anywhere.
+- **Primary metric (macro-F1, classes 1-3)**: A0 0.3699±0.0235, A1
+  0.3736±0.0064. **H2 margin: mean 0.0037, 95% item-paired-bootstrap CI
+  [-0.0199, 0.0264] (includes zero)** — well under `EFFECT_FLOOR=0.03`.
+  Seed-paired test agrees (paired t p=0.79, Wilcoxon p=0.81) — no
+  item-vs-seed divergence this time, unlike MELD's H1.
+- **Decision rule: branch (b), null/underpowered.** Applied exactly as
+  frozen; not softened, not argued with.
+- **Class 0, reported not dropped**: raw F1 0.0367±0.0452 (A0) vs.
+  0.0000±0.0000 (A1), n=4 test items both conditions — the near-total
+  unpredictability flagged in advance from Phase 3 (0.000 in 9/16 dev runs)
+  reproduced exactly on test (0.000 in 8/10 seed runs).
+- **Result:** PASS. Zero test-based tuning; test touched exactly once per
+  (condition, seed). Track 2 complete ahead of the 2026-08-24 deadline.
