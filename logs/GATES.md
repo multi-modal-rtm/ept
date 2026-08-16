@@ -419,3 +419,28 @@
   `results/summary.csv` written. **Decision rule outcome: no branch fires —
   study underpowered for H1/H2 at `EFFECT_FLOOR=0.04`, both margins positive
   and significant but below the pre-registered bar.**
+
+## Track 2 — DAiSEE H2 replication: Phase 3 (recipe search)
+
+- **Date:** 2026-08-16T07:54:32Z
+- **Commits:** `a9167a3` (frozen grid, `docs/SEARCH_GRID_DAISEE.md`, committed
+  before any run — reuses `docs/SEARCH_GRID.md`'s 8 points verbatim), `5c2f1fb`
+  (search script, committed before running), `c278d0b` (locked recipe,
+  `docs/LOCKED_RECIPE_DAISEE.md`).
+- **16 runs (A0, A1 × 8 recipes, seed 42), 600 val evaluations** — matches the
+  formula fixed in `docs/SEARCH_GRID_DAISEE.md` exactly (300 epochs/condition
+  × 2 conditions).
+- **Selected**: A0 → r08 (val macro-F1 0.2978), A1 → r06 (val macro-F1
+  0.3438). Val gap (0.0460) explicitly **not** treated as an H2 result —
+  H2 is decided on test, separate later gate, per
+  `docs/DECISION_RULES_DAISEE.md`.
+- **Class-imbalance risk, previewed on real val numbers**: class 0 (23 val
+  clips, 4 test clips) scores exactly 0.000 F1 in 9 of the 16 grid runs and
+  never exceeds 0.150 in any of them. Recorded in
+  `docs/LOCKED_RECIPE_DAISEE.md` as an explicit, advance commitment: Phase 4
+  will report accuracy and per-class F1 alongside macro-F1, and will not
+  treat macro-F1 alone as sufficient evidence for or against H2 if class 0's
+  behavior is what decides whether the test margin clears `EFFECT_FLOOR=0.03`.
+- **Result:** PASS. Zero test evaluations. **Not started**: Phase 4
+  equivalent (5-seed test evaluation) — separate, later gate, per "Track 2 at
+  its own gates," not chained into this one. Deadline: 2026-08-24.
