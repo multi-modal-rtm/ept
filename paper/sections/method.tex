@@ -35,9 +35,10 @@ presence mask. Features are linearly projected to $d{=}384$; absent
 $(e,s)$ positions are replaced with a single learned \texttt{[ABSENT]}
 vector, shared across all entities and segments, before a sinusoidal
 segment-position embedding is added. $L{=}4$ blocks follow, each performing
-temporal attention (over $S$, independently per entity), then social
-attention (over $E$, independently per segment), then a feed-forward layer
---- 6 heads, MLP ratio 4, pre-norm throughout. A learned CLS query
+multi-head attention~\cite{vaswani2017attention} temporally (over $S$,
+independently per entity), then socially (over $E$, independently per
+segment), then a feed-forward layer --- 6 heads, MLP ratio 4, pre-norm
+throughout. A learned CLS query
 cross-attends over the flattened $E{\times}S$ token set (masked by presence)
 for readout, followed by a linear classifier. Figure~\ref{fig:architecture}
 diagrams the full forward pass. The whole head is
