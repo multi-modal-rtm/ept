@@ -1,8 +1,16 @@
 cache/
 outputs/
 logs/*.log
+.claude/skills/
 *.npy
 *.pth
 *.pt
 __pycache__/
 .venv/
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.pdf
+paper/comment.cut

@@ -54,21 +54,13 @@
 \maketitle
 
 \section{Introduction}
-%% Draft from Aug 21 — does not depend on results.
-%% Core argument: a text token at position 3 and one at position 40 denote the same
-%% lexical item; a video patch at (i,j,t) and (i,j,t+1) do not denote the same anything.
-%% Quadratic attention over grid tokens therefore prices affinities between referent-free
-%% symbols. State the contribution as a controlled test of whether restoring persistence helps.
+\input{sections/intro}
 
 \section{Related Work}
-%% Draft from Aug 21. Four strands:
-%% (a) efficient video attention: divided space-time, factorised encoders, windowed,
-%%     pooling attention, token merging, SSM video models;
-%% (b) object-centric / slot-based video representation;
-%% (c) engagement and group affect recognition;
-%% (d) edge video analytics.
-%% Position EPT against (a) and (b): not a cheaper approximation of grid attention, but a
-%% different token definition.
+\input{sections/related_work}
+
+\section{Dataset Audit}
+\input{sections/dataset_audit}
 
 \section{Method}
 \subsection{Entity-Persistent Tokenization}
