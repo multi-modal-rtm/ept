@@ -36,17 +36,77 @@
 %% TODO: confirm the author list and order with all coauthors before submission.
 
 \begin{abstract}
-%% Write LAST, after the decision rule fires. Four moves:
-%% (1) grid tokens have no persistent referent, unlike text tokens;
-%% (2) EPT emits one token per (entity, segment), recovering identity;
-%% (3) the identity-shuffle control isolates persistence from entity-localized cropping;
-%% (4) headline result + end-to-end cost including detection.
+A patch token in a video transformer has no persistent referent: the same
+spatial cell at time $t$ and $t{+}1$ denotes the same physical content only
+by accident. We test whether restoring persistence --- one token per tracked
+entity per time segment, rather than one token per spatial cell --- changes
+what a video transformer learns, using an identity-shuffle control that
+holds entity localization, token count, and architecture fixed and varies
+only whether the same entity occupies the same token slot across segments.
+Under a decision rule and effect-size floor frozen before any test-split
+evaluation, three pre-registered structural hypotheses --- persistence on a
+multi-party dialogue benchmark (MELD), entity structure on the same
+benchmark, and entity structure's replication on a single-subject webcam
+benchmark (DAiSEE) --- are all null: two are positive but underpowered by
+the pre-registered floor, one is indistinguishable from zero outright. We
+report entity-localized tokenization's compute cost separately from these
+outcomes: encoder cost falls $4.53\times$ relative to a matched-budget
+spatial grid, the architecture's own attention stays under $0.03\%$ of total
+per-clip compute across every condition and budget-sweep cell tested, and
+end-to-end cost including detection --- measured
+across three internally consistent hardware regimes after a GPU detection
+path could not be made to work --- ranges from $0.23\times$ to $7.49\times$
+a grid baseline depending on where detection runs. A byproduct of preparing
+this evaluation was discovering and diagnosing severe train/test leakage in
+the classroom-engagement benchmark originally intended as primary; we report
+that finding and the reusable admission procedure it produced alongside the
+null hypothesis results.
 \end{abstract}
 
-%% CCS codes: generate at http://dl.acm.org/ccs.cfm and paste the CCSXML block here,
-%% before \maketitle. Required for papers over two pages.
-%% Suggested areas: Computing methodologies~Activity recognition and understanding;
-%% Computing methodologies~Video summarization; Human-centered computing~Ubiquitous computing.
+%% TODO before submission: the five concept_id numbers below are NOT independently
+%% verified against ACM's live CCS tool -- https://dl.acm.org/ccs.cfm returned 403
+%% (blocked) and dlccsdev.acm.org did not resolve, in every attempt made this
+%% session. "Activity recognition and understanding"'s ID was corrected once already
+%% after a web search surfaced a real paper using a longer, different ID than the
+%% first guess (...10010225 -> ...10010225.10010228); the same could be true of any
+%% of the other four, which were not independently cross-checked against a real
+%% paper's source the way that one was. Regenerate this whole block from the live
+%% tool before camera-ready -- do not trust these numbers as final.
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10010147.10010178.10010224.10010225.10010228</concept_id>
+       <concept_desc>Computing methodologies~Activity recognition and understanding</concept_desc>
+       <concept_significance>500</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002944.10011122.10002945</concept_id>
+       <concept_desc>General and reference~Evaluation</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010147.10010257.10010293.10010294</concept_id>
+       <concept_desc>Computing methodologies~Neural networks</concept_desc>
+       <concept_significance>300</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10002944.10011122.10002947</concept_id>
+       <concept_desc>General and reference~Measurement</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+   <concept>
+       <concept_id>10010583.10010584</concept_id>
+       <concept_desc>Computer systems organization~Embedded systems</concept_desc>
+       <concept_significance>100</concept_significance>
+       </concept>
+ </ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Computing methodologies~Activity recognition and understanding}
+\ccsdesc[300]{General and reference~Evaluation}
+\ccsdesc[300]{Computing methodologies~Neural networks}
+\ccsdesc[100]{General and reference~Measurement}
+\ccsdesc[100]{Computer systems organization~Embedded systems}
 
 \keywords{video understanding, tokenization, attention efficiency, engagement
   recognition, edge inference}
@@ -63,29 +123,19 @@
 \input{sections/dataset_audit}
 
 \section{Method}
-\subsection{Entity-Persistent Tokenization}
-\subsection{The EPT-Former}
-\subsection{Isolating Persistence: the Identity-Shuffle Control}
-%% This subsection is the methodological heart. Explain why A2 exists and why no
-%% per-slot identity embedding is used.
+\input{sections/method}
 
 \section{Experimental Setup}
-\subsection{Datasets and Protocol}
-\subsection{Conditions}
-\subsection{Pre-registration}
-%% State that hypotheses and the decision rule were committed before any test evaluation,
-%% and give the commit hash. This is a credibility asset — do not bury it.
+\input{sections/pre_registration}
 
 \section{Results}
-\subsection{Does Persistence Help?}
-\subsection{Ablations}
-\subsection{Computational Cost}
-%% Report detection+tracking as its own line item. Never fold it into the attention FLOPs.
+\input{sections/results}
 
 \section{Discussion and Limitations}
-%% Include: single-camera classroom setting; tracking failure modes; E=1 degeneracy on DAiSEE.
+\input{sections/discussion}
 
 \section{Conclusion}
+\input{sections/conclusion}
 
 \begin{acks}
 %% Omit entirely in anonymous mode — the acks environment handles this automatically.

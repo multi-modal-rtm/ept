@@ -1,0 +1,31 @@
+%% paper/sections/conclusion.tex
+%% Draft only. Brief, consistent with the all-null framing throughout.
+\label{sec:conclusion}
+
+This paper tested whether giving a video transformer tokens with a genuine
+persistent referent changes what it learns, using a control designed to
+isolate persistence from the entity-localized cropping and reduced token
+budget that ordinarily travel with it. Under a decision rule and effect-size
+floor frozen before any test-split evaluation, all three pre-registered
+structural hypotheses came back null: MELD's persistence and entity-structure
+margins are positive with confidence intervals excluding zero but short of
+the pre-registered floor, and the entity-structure comparison's replication
+on DAiSEE is indistinguishable from zero outright
+(\S\ref{sec:results}--\ref{sec:discussion}). We report this as the finding,
+not as a setback to be explained away: a pre-registered null, arrived at
+through a control built specifically to make the positive result easy to
+see if it were there, is evidence about the hypothesis, not an absence of
+result.
+
+Separately, and unconditionally on how the hypotheses resolved, entity-
+localized cropping cuts per-crop encoder cost by $4.53\times$, the attention
+mechanism this architecture is built around accounts for a fraction of a
+percent of total compute, and the end-to-end cost of trading a spatial grid
+for tracked entities depends on where detection is run --- a
+$0.23\times$--$7.49\times$ range, not a single favorable number
+(\S\ref{sec:efficiency}). Together with the dataset-admission procedure this
+work produced as a reusable artifact (\S\ref{sec:dataset-audit}), the
+contribution of this paper is less a positive architectural result than a
+demonstration of what a fully pre-registered, matched-feature, cost-honest
+evaluation of an intuitive idea actually looks like when the idea does not
+clear its own bar.

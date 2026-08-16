@@ -1,0 +1,83 @@
+%% paper/sections/discussion.tex
+%% Draft only. Limitations get their own subsection, six specific items.
+\label{sec:discussion}
+
+Three pre-registered structural hypotheses were tested under a decision
+rule and effect-size floor frozen before any test-split evaluation
+(\S\ref{sec:pre-registration}), and all three came back null
+(\S\ref{sec:results}). MELD's H1 and H2 are the underpowered-but-real flavor
+of null --- positive margins, confidence intervals excluding zero, both
+still short of the pre-registered bar; DAiSEE's H2 replication is the
+indistinguishable-from-zero flavor, agreeing across item-paired and
+seed-paired tests alike. Read together, the honest summary is not
+``persistence doesn't matter'' or ``entity structure doesn't matter'' ---
+this study's power does not license either claim --- but that the specific,
+falsifiable version of both claims this paper pre-registered did not survive
+contact with a locked test set, on either dataset. The identity-shuffle
+control (\S\ref{sec:shuffle-control}) did the job it was designed to do: it
+gave persistence a real chance to show a distinguishable effect against
+entity-localized cropping and token budget, under conditions where the
+architecture, features, and everything else were held fixed, and the effect
+it isolated did not clear the bar set for it in advance.
+
+The efficiency results (\S\ref{sec:efficiency}) are not a consolation
+finding dressed up to offset the null hypotheses --- they are a separate,
+narrower claim about where compute goes, and they hold regardless of how H1
+and H2 came out. Entity-localized cropping cuts encoder cost by $4.53\times$
+unconditionally; end-to-end cost relative to a grid baseline depends on
+hardware placement in a way that spans a $0.23\times$--$7.49\times$ range,
+not a single number; and the attention mechanism this paper's architecture
+is built around turns out to be a rounding error in the compute budget
+compared to the frozen encoder it sits on top of. If token-count-driven
+efficiency work in this space wants to target the dominant cost term, that
+term is per-crop encoding, not fusion attention.
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\textbf{Frozen backbone, no fine-tuning.} Every condition in this paper,
+including the grid baseline, consumes the same frozen DINOv2 features
+(\S\ref{sec:method}). This is deliberate --- it is what makes the matched-
+feature comparison possible --- but it means no result here speaks to
+whether entity-persistent tokenization would change what an end-to-end
+fine-tuned encoder learns, only to what a fixed, off-the-shelf visual
+representation supports downstream.
+
+\textbf{One architecture family.} EPT-Former is a standard multi-head-attention
+transformer applied to a differently-defined token stream
+(\S\ref{sec:method}); this paper does not test whether the same entity-
+persistent tokens would behave differently under a state-space or
+convolutional fusion mechanism, only under attention.
+
+\textbf{MELD's identity recovery is imperfect.}
+%% outputs/meld_phase1_2_summary/REPORT.md: 62.2% purity, 16.7% chance floor
+Clustering purity against a 6-character reference set is 62.2\% (16.7\%
+chance floor) --- well above chance but far from clean tracking. The
+purity-stratified analysis (\S\ref{sec:results}) argues the pooled H1 null
+is not simply an artifact of this, but it cannot rule out that better
+identity recovery would move the result; it can only show the result is not
+obviously monotone in purity as measured.
+
+\textbf{DAiSEE's $E{=}1$ degeneracy.} DAiSEE's primary condition has exactly
+one entity slot (\S\ref{sec:pre-registration}), so A2 and H1 do not exist for
+it by construction. The DAiSEE replication tests H2 only; it says nothing
+about persistence on single-subject video, because there is no second slot
+for identity to persist across.
+
+\textbf{GPU detection cost is unmeasured, not zero.} Every end-to-end cost
+regime that involves detection uses CPU-measured detection latency
+(\S\ref{sec:efficiency}); the GPU-only regime could not be measured due to a
+CUDA-version mismatch in the available \texttt{onnxruntime-gpu} build, not
+because GPU detection is expected to be free. A working GPU detection
+measurement could shift the low end of the reported ratio range.
+
+\textbf{OUC-CGE's effective sample size is unrecoverable.} The dataset-audit
+connected-components analysis
+%% outputs/phase3_5_audit/TRACK1_TRACK2_REPORT.md sec.4: "plausibly in the tens, not the thousands"
+(\S\ref{sec:dataset-audit}) finds the corpus's effective number of
+independent, exchangeable recording units is plausibly in the tens, not the
+thousands implied by its 7700-clip count, but that no similarity threshold
+recovers a trustworthy estimate of the true number. This is why OUC-CGE is
+reported only as a case study, never as a results-table entry: not just its
+split, but its usable sample size, is not something this paper's methods can
+put a reliable number on.

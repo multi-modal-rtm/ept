@@ -1,0 +1,118 @@
+%% paper/sections/pre_registration.tex
+%% Draft only. Every number traced via inline LaTeX comment to its source
+%% file. Covers what was planned as "Experimental Setup" (datasets, protocol,
+%% conditions) plus the pre-registration discipline itself.
+\label{sec:pre-registration}
+
+\subsection{Datasets and Protocol}
+\textbf{MELD}~\cite{poria2019meld}, multi-party television dialogue,
+%% outputs/meld_phase1_2_summary/REPORT.md: cache/MELD_MANIFEST.json 13706 clips (train 9988, dev 1108, test 2610)
+13706 clips (train 9988 / dev 1108 / test 2610), 3-class sentiment. Primary
+entity budget $E{=}6$ (cached at $E_{\max}{=}8$), $S{=}4$. Identity recovery
+is agglomerative face-embedding clustering (shot cuts break IoU tracking),
+threshold tuned on dev only, achieving
+%% outputs/meld_phase1_2_summary/REPORT.md: "Best threshold 0.55 (purity/accuracy against the character references: 62.2%..."
+62.2\% clustering purity against a 6-character reference set (16.7\% chance
+floor) --- imperfect identity recovery is a limitation discussed in
+\S\ref{sec:limitations}, not a claim of clean tracking. MELD passed a dataset
+admission procedure (\S\ref{sec:dataset-audit}) before being promoted to
+primary: cross-split near-duplicate rate at 0.95 cosine similarity effectively
+zero, trivial-feature-probe macro-F1
+%% outputs/dataset_admission/meld/admission_report.json: trivial_probe.val_macro_f1
+0.4155.
+
+\textbf{DAiSEE}~\cite{gupta2016daisee}, single-subject e-learning webcam
+video,
+%% logs/GATES.md: DAiSEE 8571/8571 clips (train 5358 / val 1429 / test 1784)
+8571 clips (train 5358 / val 1429 / test 1784), 4-class Engagement. Primary
+entity budget locked at $E{=}1$: the detector's raw output contains multiple
+candidate person-tracks per clip (background artifacts, brief ID switches),
+but only the single top-confidence$\times$coverage track corresponds to the
+annotated subject, so $E{=}1$ discards noise rather than signal. With one
+entity slot there is no second slot to shuffle, so A2 and H1 (persistence)
+are not defined for this dataset (\S\ref{sec:results}). DAiSEE's own
+admission-test trivial-probe score,
+%% outputs/dataset_admission/daisee/admission_report.json: trivial_probe.val_macro_f1
+macro-F1 0.2177 on its subject-disjoint split, is the reference floor used to
+validate the admission procedure itself (\S\ref{sec:dataset-audit}).
+
+\textbf{OUC-CGE}~\cite{lu2025ouccge} was the originally intended primary
+dataset and failed the same admission procedure; \S\ref{sec:dataset-audit}
+reports the audit in full. It is retained in this paper as a rejected-dataset
+case study, not as a results-table entry.
+
+\subsection{Conditions}
+A0--A5 and mask-only share the EPT-Former (\S\ref{sec:method}) or a matched
+simplification of it, differing only in what tokens they receive: \textbf{A0}
+--- fixed spatial grid, no entities, matched token budget; \textbf{A1} ---
+full EPT, entity-localized, persistent identity (primary condition);
+\textbf{A2} --- EPT with entity identity shuffled per segment
+(\S\ref{sec:shuffle-control}); \textbf{A3} --- temporal attention only
+(social attention disabled); \textbf{A4} --- social attention only (temporal
+attention disabled); \textbf{A5} --- mean-pooled entity tokens through an
+MLP, no attention at all; \textbf{mask-only} --- the presence mask alone,
+with no visual features, testing whether who-is-onscreen leaks label
+information by itself. A \textbf{trivial-feature probe} (linear classifier
+on a single mean-pooled clip embedding, no temporal/entity/attention
+structure) is reported as a standing floor in every results table, not as a
+condition that went through recipe search.
+
+\subsection{Pre-registration}
+Hypotheses, decision rules, and effect-size floors were committed to
+\texttt{docs/DECISION\_RULES.md} (MELD) and
+\texttt{docs/DECISION\_RULES\_DAISEE.md} (DAiSEE) before any test-split
+evaluation, with amendments appended and dated, never edited in place. This
+is stated here as a credibility mechanism, not a formality: every number in
+\S\ref{sec:results} that bears on a hypothesis was computed after its
+decision criterion was frozen, not the reverse.
+
+\textbf{H1 (persistence, MELD only).} $A1 - A2 \geq \text{EFFECT\_FLOOR}$,
+macro-F1. Not defined for DAiSEE ($E{=}1$, \S\ref{sec:method}).
+
+\textbf{H2 (entity structure).} $A1 - A0 \geq \text{EFFECT\_FLOOR}$,
+macro-F1 (MELD); macro-F1 restricted to classes 1--3 (DAiSEE, see below).
+
+\textbf{Decision rule (MELD, three branches).} (a) H1 supported: persistence
+is the mechanism. (b) $|A1{-}A2| < \text{EFFECT\_FLOOR}$ and H2 supported:
+entity localization and token budget matter, persistence does not. (c) $A1 <
+A2 - \text{EFFECT\_FLOOR}$: hypothesis refuted. A branch fires only if both
+the point estimate clears \texttt{EFFECT\_FLOOR} \emph{and} a paired
+bootstrap over test items (10{,}000 resamples) gives a 95\% CI excluding
+zero.
+
+\textbf{Decision rule (DAiSEE, H2 only, two conditions).} (a) H2 supported.
+(b) $|\text{margin}| < \text{EFFECT\_FLOOR}$: null/underpowered. (c) margin
+$< -\text{EFFECT\_FLOOR}$: reversed. Same paired requirement.
+
+\textbf{Effect floors, computed blind.} For each dataset, seed-level and
+item-level macro-F1 variance was bootstrapped on dev/val \emph{before}
+inspecting which condition scored higher --- only dispersion was ever
+recorded --- then $\text{EFFECT\_FLOOR} = \max(0.02, 2\times
+\text{pooled\_SE})$, rounded up. MELD:
+%% docs/DECISION_RULES.md 2026-08-15 amendment ("Effect floor computed"): pooled_SE=0.0170
+pooled SE $0.0170 \Rightarrow \text{EFFECT\_FLOOR}{=}0.04$
+%% commit a6d19a8 (procedure fixed) / 8c156a9 (floor computed)
+(\texttt{a6d19a8}/\texttt{8c156a9}). DAiSEE:
+%% docs/DECISION_RULES_DAISEE.md 2026-08-15 amendment: pooled_SE=0.0138
+pooled SE $0.0138 \Rightarrow \text{EFFECT\_FLOOR}{=}0.03$
+%% commit 00dcc1d (pre-registration) / 7c2c0d0 (floor computed)
+(\texttt{00dcc1d}/\texttt{7c2c0d0}). Both studies are, by this procedure,
+explicitly underpowered for the originally-hoped 0.02 margin --- stated in
+the amendment before either floor was used to evaluate anything, not
+discovered after the fact.
+
+\textbf{DAiSEE primary-metric amendment.}
+%% commit 347115b, committed before Phase 4 ran
+Committed before DAiSEE's test evaluation (\texttt{347115b}), the primary
+metric for DAiSEE's H2 was restricted to macro-F1 over classes 1--3, excluding
+class 0 from the average (reported separately as a raw count and raw F1 in
+every table, never dropped silently). Class 0 has
+%% docs/DECISION_RULES_DAISEE.md: test distribution {0:4,...}
+4 test clips --- too few to support a macro-averaged claim --- and scored
+%% docs/LOCKED_RECIPE_DAISEE.md: class 0 F1 == 0.000 in 9 of 16 grid runs, val
+0.000 F1 in 9 of 16 dev-search grid points despite 23 val clips to calibrate
+against. \texttt{EFFECT\_FLOOR} was explicitly \emph{not} recomputed for the
+new metric, to avoid letting the threshold move with information gathered
+after the original blind bootstrap. The amendment used only val-split
+behavior and test-set item counts; no test-split performance had been
+observed at the time it was written.
