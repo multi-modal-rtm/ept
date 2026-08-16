@@ -144,3 +144,45 @@ differ.
    locked recipe (`docs/LOCKED_RECIPE_DAISEE.md`) — separate, later gate.
 4. Phase 4 equivalent: 5-seed test evaluation, touched once, decision rule applied exactly as
    frozen — separate, later gate.
+
+### 2026-08-16 — Primary endpoint restricted to classes 1-3; class 0 reported separately
+
+**Amendment, committed before Phase 4 runs.** The primary endpoint for H2 changes from
+4-class macro-F1 to **macro-F1 over classes 1-3 only** (`sklearn.metrics.f1_score` with
+`labels=[1,2,3], average='macro'` — each class's F1 is still computed from the full
+prediction set, including any item whose true or predicted label is class 0; only the
+*averaging* excludes class 0). **Class 0 is excluded from the primary metric and is
+instead reported separately as a raw item count and a raw F1 score, with the exclusion
+stated explicitly in every table that reports the primary metric** — not silently
+dropped, not folded into an average that would hide what it's doing to the number.
+
+**Rationale, recorded verbatim:**
+
+- Class 0 has 4 test instances; an F1 estimate from 4 items cannot support a
+  macro-averaged claim.
+- In the Phase 3 dev search, class 0 scored 0.000 F1 in 9 of 16 runs and never
+  exceeded 0.150, with 23 val clips available.
+- This decision uses ONLY val-split behaviour and test-set COUNTS. No test-split
+  performance has been observed.
+
+**`EFFECT_FLOOR` stays at `0.03`, unchanged, and is explicitly NOT recomputed for the
+new metric.** Recomputing it now, after switching which classes the average covers,
+would let the threshold move using information (the metric-definition change itself,
+prompted by val-split and count evidence) gathered after the original blind bootstrap
+— exactly what the blind procedure existed to prevent. The floor computed against the
+4-class metric is retained as the floor for the 1-3-class metric unchanged; no new
+bootstrap is run.
+
+**H2, restated with the amended primary metric:**
+- H2 (entity structure). `A1 (EPT) − A0 (grid tokens, matched budget) ≥ 0.03`,
+  macro-F1 over classes 1-3 only.
+- The decision rule's three-branch table (§ Decision rule above) is otherwise
+  unchanged — same branches, same paired requirement (point estimate clears
+  `EFFECT_FLOOR` AND a paired bootstrap over test items gives a 95% CI excluding
+  zero), now evaluated against the 1-3-class margin instead of the 4-class margin.
+
+**Reported as secondary, unconditionally — all of it, whatever it says:** the original
+4-class macro-F1, accuracy, and per-class F1 for all four classes (including class 0's
+raw count and raw F1) are still computed and reported alongside the primary metric in
+every Phase 4 table. The amendment changes what decides the branch; it does not remove
+any number from the report.
