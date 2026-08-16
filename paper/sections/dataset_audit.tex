@@ -30,7 +30,22 @@ release does not describe the partition as session- or recording-disjoint.
 For each clip we take the masked mean of a frozen backbone's per-position
 embeddings over the cached feature tensor, L2-normalize it, and record its
 cosine similarity to its nearest neighbor in the comparison split.
-Table~\ref{tab:ouccge-dup} summarizes all three cross-split comparisons.
+Table~\ref{tab:ouccge-dup} summarizes all three cross-split comparisons;
+Figure~\ref{fig:ouccge-leakage} shows two representative pairs directly.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{figures/fig2_ouccge_leakage.pdf}
+  \caption{Frames from OUC-CGE~\cite{lu2025ouccge}, CC-BY-4.0. Written
+    informed consent for publication of these images was obtained by the
+    dataset authors (ethics approval OUC-HM-20231205). Two val/train pairs,
+%% outputs/dataset_admission/ouccge/pairs/: pair_00 and pair_02, both cosine similarity 1.000000
+    each at masked-mean DINOv2~\cite{oquab2023dinov2} cosine similarity $1.000000$ against its
+    cross-split nearest neighbor (Table~\ref{tab:ouccge-dup}): the same
+    physical moment of one continuous recording, independently assigned to
+    different splits.}
+  \label{fig:ouccge-leakage}
+\end{figure}
 
 \begin{table}[t]
 \caption{OUC-CGE cross-split nearest-neighbor cosine similarity.
@@ -51,8 +66,9 @@ val $\to$ test   & 769 & 0.960 & 0.975 & 91.16\% \\
 All three comparisons are elevated roughly equally --- not a train/test-only
 artifact. Manual inspection of the highest-similarity cross-split pairs
 %% outputs/phase3_5_audit/REPORT.md sec.2
-(cosine similarity $\geq 0.9999996$, identical labels, same room/table/
-students/objects/pose) shows these are adjacent temporal segments of one
+(Figure~\ref{fig:ouccge-leakage}; cosine similarity $\geq 0.9999996$,
+identical labels, same room, table, students, objects, and pose) shows
+these are adjacent temporal segments of one
 continuous recording, independently assigned across splits. Sequential clip
 identifiers are not blocked by split: adjacent-numbered clips land in
 different splits

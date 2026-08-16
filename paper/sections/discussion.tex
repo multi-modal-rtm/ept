@@ -36,7 +36,7 @@ term is per-crop encoding, not fusion attention.
 \label{sec:limitations}
 
 \textbf{Frozen backbone, no fine-tuning.} Every condition in this paper,
-including the grid baseline, consumes the same frozen DINOv2 features
+including the grid baseline, consumes the same frozen DINOv2~\cite{oquab2023dinov2} features
 (\S\ref{sec:method}). This is deliberate --- it is what makes the matched-
 feature comparison possible --- but it means no result here speaks to
 whether entity-persistent tokenization would change what an end-to-end

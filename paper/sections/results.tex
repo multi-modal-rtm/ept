@@ -120,9 +120,9 @@ artifact of one bad run.
 
 \subsection{Ablations}
 %% results/summary.csv: A3, A4, A5, mask_only rows (macro_f1_mean +/- macro_f1_std)
-A3 (temporal-only, $0.4032{\pm}0.0431$) and A4 (social-only,
-$0.4111{\pm}0.0311$) both sit close to A1 ($0.4040{\pm}0.0077$,
-\S\ref{sec:pre-registration}'s primary condition) --- neither attention axis
+A3 (temporal-only) reaches $0.4032{\pm}0.0431$ and A4 (social-only) reaches
+$0.4111{\pm}0.0311$, both close to A1's $0.4040{\pm}0.0077$
+(\S\ref{sec:pre-registration}'s primary condition) --- neither attention axis
 alone is doing dramatically more or less than the combination. A5
 (mean-pooled entities, no attention at all,
 %% results/summary.csv: A5 row
@@ -159,7 +159,7 @@ alone, does not predict sentiment on MELD.
 $0.0192\%$ of A1's total per-clip compute; across every condition and every
 budget-sweep cell it stays under $0.03\%$
 %% outputs/meld_phase6_gflops_breakdown.json: condition_rows / budget_sweep_rows, fusion_attention_pct_of_grand_total range
-. The frozen DINOv2 encoder --- itself attention-based, applied once per
+. The frozen DINOv2~\cite{oquab2023dinov2} encoder --- itself attention-based, applied once per
 crop to far more patch tokens than EPT-Former ever fuses --- is essentially
 the entire cost. This is not a claim that attention is intrinsically cheap;
 it is a claim about token count at each stage. The original motivation for
