@@ -22,10 +22,12 @@
 
 \begin{document}
 
-%% TODO: pick per the decision rule in docs/DECISION_RULES.md.
-%% Branch (a): "Tokens That Persist: ..."   Branches (b)/(c): "Does Identity Persistence Matter? ..."
-\title{Tokens That Persist: Entity-Centric Video Tokenization for Group
-  Engagement Analysis at the Edge}
+%% Title set 2026-08-16 per user confirmation, matching branches (b)/(c) of
+%% the title decision rule (neither MELD nor DAiSEE fired branch (a) --
+%% see \S\ref{sec:pre-registration}/\S\ref{sec:results}). Subject to a final
+%% alternative the user may still confirm.
+\title{Does Identity Persistence Matter? Pre-Registered Null Results for
+  Entity-Centric Video Tokenization}
 %% Repo push verified 2026-08-16: github.com/multi-modal-rtm/ept is public
 %% (unauthenticated HTTP 200, isPrivate=false via `gh repo view`) and
 %% origin/main's HEAD (d25fbc0) matches this working tree's HEAD exactly --
@@ -117,8 +119,8 @@ null hypothesis results.
 \ccsdesc[100]{General and reference~Measurement}
 \ccsdesc[100]{Computer systems organization~Embedded systems}
 
-\keywords{video understanding, tokenization, attention efficiency, engagement
-  recognition, edge inference}
+\keywords{video tokenization, dataset leakage, pre-registration, null
+  results, entity-centric representation}
 
 \maketitle
 
@@ -147,20 +149,19 @@ null hypothesis results.
 \input{sections/conclusion}
 
 \section*{Ethics Statement}
-OUC-CGE~\cite{lu2025ouccge} and MELD~\cite{poria2019meld} are used under
-their respective stated release terms (OUC-CGE: CC-BY-4.0). The dataset
-audit in \S\ref{sec:dataset-audit} concerns split-protocol properties ---
-near-duplicate content assigned across train/val/test partitions --- not
-individuals, and no attempt was made to identify, track, or re-identify any
-person appearing in either corpus beyond the anonymized entity-tracking
-already required by this paper's own method. The OUC-CGE leakage finding
-reported in \S\ref{sec:dataset-audit} is a property of the released
-partition, not of the underlying recordings, their collection, or their
-authors.
-
-\begin{acks}
-%% Omit entirely in anonymous mode — the acks environment handles this automatically.
-\end{acks}
+OUC-CGE~\cite{lu2025ouccge}, MELD~\cite{poria2019meld}, and
+DAiSEE~\cite{gupta2016daisee} are used under their respective stated
+release terms: OUC-CGE under CC-BY-4.0; DAiSEE under its data-use agreement
+(research use only, no redistribution to third parties, and citation of the
+original DAiSEE papers), agreed to by the researchers who obtained it for
+this project. The dataset audit in \S\ref{sec:dataset-audit} concerns
+split-protocol properties --- near-duplicate content assigned across
+train/val/test partitions --- not individuals, and no attempt was made to
+identify, track, or re-identify any person appearing in any corpus beyond
+the anonymized entity-tracking already required by this paper's own method.
+The OUC-CGE leakage finding reported in \S\ref{sec:dataset-audit} is a
+property of the released partition, not of the underlying recordings,
+their collection, or their authors.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}

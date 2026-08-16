@@ -38,8 +38,8 @@ linear probe on a single mean-pooled frame embedding --- no temporal
 structure, no entities, no attention, nothing an architecture paper would
 want credit for --- reaches
 %% outputs/phase3_5_audit/REPORT.md sec.4
-macro-F1 $0.9748$ on its provided validation split, statistically
-indistinguishable from a full entity-persistent transformer trained on the
+macro-F1 $0.9748$ on its provided validation split, essentially identical to
+a full entity-persistent transformer trained on the
 same split (
 %% outputs/phase3_5_audit/REPORT.md sec.4, citing the locked-recipe A1 result
 $0.9767$). The same probe, unchanged, scores
@@ -54,15 +54,37 @@ against before it is trusted with a hypothesis test. We apply that procedure
 to our eventual primary dataset before using it, not after being burned by
 it.
 
-The contributions of this paper are therefore: (1) Entity-Persistent
-Tokenization (EPT) and an identity-shuffle control that isolates persistence
-from its usual confounds, evaluated under a decision rule and effect-size
-floor pre-registered before any test-set evaluation
-(\S\ref{sec:pre-registration}); (2) a diagnosed, quantified account of
-train/test leakage in a released classroom-engagement benchmark, reframed
-in \S\ref{sec:dataset-audit} as independent confirmation of a known failure
-mode in clip-derived video benchmarks rather than a claim of discovering the
-phenomenon itself; and (3) a lightweight, reusable dataset-admission test ---
-cross-split near-duplicate detection plus a trivial-feature-probe floor
-against a subject-disjoint reference --- that we run on every dataset in
-this paper, not only the one that failed it.
+Under that pre-registered decision rule, the answer is a clean null across
+every structural hypothesis this paper tests. Persistence's effect and
+entity structure's effect on MELD are both real --- positive, confidence
+intervals excluding zero --- but fall short of the pre-registered
+effect-size floor; entity structure's replication on DAiSEE is
+indistinguishable from zero outright, a divergence from MELD we report as a
+failure to replicate, not as a stronger MELD finding standing uncontested
+(\S\ref{sec:results}). Separately, and regardless of how the hypotheses
+resolved, entity-localized tokenization's compute cost is a genuine but
+qualified win: encoder cost falls $4.53\times$ against a matched-budget
+spatial grid, but end-to-end cost including detection ranges from
+$0.23\times$ to $7.49\times$ a grid baseline depending on where detection
+runs, so no single number describes the deployment trade-off
+(\S\ref{sec:efficiency}).
+
+The contributions of this paper are therefore: (1) an identity-shuffle
+control that isolates persistence from entity-localized cropping and token
+budget, applied under a decision rule and effect-size floor pre-registered
+before any test-set evaluation, finding that persistence's and entity
+structure's effects on MELD are real but underpowered and that entity
+structure's effect does not replicate on DAiSEE
+(\S\ref{sec:pre-registration}--\S\ref{sec:results}); (2) a diagnosed,
+quantified account of train/test leakage in a released classroom-engagement
+benchmark, reframed in \S\ref{sec:dataset-audit} as independent confirmation
+of a known failure mode in clip-derived video benchmarks rather than a claim
+of discovering the phenomenon itself; (3) a lightweight, reusable
+dataset-admission test --- cross-split near-duplicate detection plus a
+trivial-feature-probe floor against a subject-disjoint reference --- that we
+run on every dataset in this paper, not only the one that failed it; and (4)
+a compute-cost accounting for entity-localized tokenization that separates a
+real, unconditional encoder-cost reduction ($4.53\times$) from an end-to-end
+cost that depends entirely on where detection runs
+($0.23\times$--$7.49\times$), reported as a range rather than a single
+favorable number (\S\ref{sec:efficiency}).

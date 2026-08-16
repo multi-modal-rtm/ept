@@ -209,8 +209,13 @@ detection is run and how its cost is amortized, not on any single number.
 $E{=}1,S{=}2$ (2 tokens) reaches macro-F1 $0.3932$, $97.3\%$ of A1's own
 $E{=}6,S{=}4$ result ($0.4040$), at
 %% results/efficiency_budget_sweep.csv: e=1,s=2 row, total_model_gflops_per_clip
-$621.5$ GFLOPs/clip against A1's $1261.5$. Every one of the 10 budget-sweep
-cells' CIs exclude the trivial-feature probe; $E{=}1,S{=}2$ is the smallest
-by token count that does
+$621.5$ GFLOPs/clip against A1's own
+%% results/efficiency_budget_sweep.csv: e=6,s=4 row, total_model_gflops_per_clip=1261.45 -> 1261.5
+%% (total model: encoder + fusion attention + head; the encoder-only figure quoted
+%% above this subsection, $1261.0$, excludes the ~0.5 GFLOPs of fusion attention and
+%% head -- both numbers are correct, they are not the same quantity)
+total $1261.5$ (encoder-only: $1261.0$, above). Every one of the 10
+budget-sweep cells' CIs exclude the trivial-feature probe; $E{=}1,S{=}2$ is
+the smallest by token count that does
 %% outputs/meld_phase4_posthoc_analysis.json: smallest_excluding_probe (e=1,s=2, t_p=0.00031)
 .

@@ -22,9 +22,9 @@ OUT_PATH = os.path.join(REPO_ROOT, "paper", "figures", "fig2_ouccge_leakage.pdf"
 # tied to one physical scene or one label.
 EXAMPLES = [
     {"file": "pair_00_high_view1076_vs_high_view1073.png",
-     "query": "high/view1076 (val, label=positive)", "match": "high/view1073 (train, label=positive)"},
+     "query": "high/view1076 (val, label=high)", "match": "high/view1073 (train, label=high)"},
     {"file": "pair_02_low_view2598_vs_low_view2603.png",
-     "query": "low/view2598 (val, label=negative)", "match": "low/view2603 (train, label=negative)"},
+     "query": "low/view2598 (val, label=low)", "match": "low/view2603 (train, label=low)"},
 ]
 
 

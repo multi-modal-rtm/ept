@@ -43,7 +43,8 @@ emergent property that is hard to ablate.
 Video-based engagement recognition has largely developed on datasets built
 around a single subject and a subject-disjoint split --- DAiSEE, 9068 ten
 second e-learning clips from 112 subjects, four ordinal engagement
-levels~\cite{gupta2016daisee}; EngageNet's official split is likewise
+levels~\cite{gupta2016daisee}; EngageNet's~\cite{singh2023engagenet}
+official split is likewise
 subject-independent. Multi-party affect work (e.g.\ MELD, dialogue-level
 sentiment and emotion over multi-speaker television
 video~\cite{poria2019meld}) instead splits by dialogue or scene. OUC-CGE
@@ -62,9 +63,9 @@ overlapping data splits are identified as a confound in the
 personality-attribution literature, with the same source video contributing
 clips to more than one split~\cite{ras2019background}. The
 general problem of detecting such leakage in visual datasets via embedding
-similarity and cluster/connected-component analysis is addressed directly,
-contemporaneously with this project's own audit, by
-Ramos~et~al.~\cite{ramos2025leakage}, using a similar toolkit (embedding
+similarity and cluster/connected-component analysis is addressed directly by
+prior work, Ramos~et~al.~\cite{ramos2025leakage} (August 2025, roughly a
+year before this project's own audit), using a similar toolkit (embedding
 nearest-neighbor similarity, connected components across splits) to the one
 independently developed in \S\ref{sec:dataset-audit}. We did not find a
 prior report specific to OUC-CGE --- it is a recent release
@@ -72,8 +73,8 @@ prior report specific to OUC-CGE --- it is a recent release
 or errata. We therefore present \S\ref{sec:dataset-audit}'s finding as an
 instance of an already-documented failure class in clip-derived video
 benchmarks, newly identified for this specific dataset, rather than as a
-novel phenomenon; the contribution is the finding for OUC-CGE plus a
-reusable, dataset-agnostic admission procedure, not the general observation
+novel phenomenon; the contribution is the OUC-CGE instance plus a
+reusable, dataset-agnostic admission procedure packaged as one script, not the general observation
 that clip-level splitting can leak.
 
 \paragraph{Edge video analytics.}
